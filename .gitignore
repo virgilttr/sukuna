@@ -1,4 +1,15 @@
 *.js
+# Ignore package-lock.json files
+package-lock.json
+yarn.lock
+**/package-lock.json
+# Ignore environment variable files
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
 !jest.config.js
 *.d.ts
 node_modules
