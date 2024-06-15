@@ -1,69 +1,72 @@
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { NextRequest, NextResponse } from 'next/server';
-import { IncomingMessage } from 'http';
-import formidable, { File, Fields, Files } from 'formidable';
-import AWS from 'aws-sdk';
-import fs from 'fs/promises';
+import { fromEnv } from "@aws-sdk/credential-providers";
 
-// Configure AWS SDK
-const s3 = new AWS.S3({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: process.env.AWS_REGION,
+const s3 = new S3Client({
+  region: "us-east-1",
+  credentials: fromEnv(),
 });
 
-// Disable Next.js body parsing to let formidable handle it
 export const config = {
   api: {
     bodyParser: false,
   },
 };
 
-const uploadFile = async (file: File): Promise<AWS.S3.ManagedUpload.SendData> => {
-  const fileBuffer = await fs.readFile(file.filepath);
+async function streamToBuffer(stream: ReadableStream): Promise<Buffer> {
+  const reader = stream.getReader();
+  const chunks: Uint8Array[] = [];
+  let done: boolean = false;
 
-  const params: AWS.S3.PutObjectRequest = {
-    Bucket: process.env.S3_BUCKET_NAME!,
-    Key: file.originalFilename!,
-    Body: fileBuffer,
-    ContentType: file.mimetype!,
-  };
+  while (!done) {
+    const { value, done: chunkDone } = await reader.read();
+    if (value) {
+      chunks.push(value);
+    }
+    done = chunkDone;
+  }
 
-  return s3.upload(params).promise();
-};
-
-const parseFiles = (req: IncomingMessage): Promise<{ fields: Fields; files: Files }> => {
-  return new Promise((resolve, reject) => {
-    const form = new formidable.IncomingForm();
-
-    form.parse(req, (err, fields, files) => {
-      if (err) reject(err);
-      else resolve({ fields, files });
-    });
-  });
-};
+  return Buffer.concat(chunks);
+}
 
 export async function POST(req: NextRequest) {
+  console.info("Received a POST request");
+
   try {
-    // Cast the NextRequest to IncomingMessage to be compatible with formidable
-    const { files } = await parseFiles(req as any as IncomingMessage);
+    const formData = await req.formData();
+    const fileUploadPromises: Promise<any>[] = [];
 
-    const fileArray: File[] = [];
+    formData.forEach(async (value, key) => {
+      if (value instanceof File) {
+        const file = value;
+        const fileBuffer = await streamToBuffer(file.stream());
+        const uploadParams = {
+          Bucket: process.env.S3_BUCKET_NAME as string, // replace with your S3 bucket name
+          Key: file.name,
+          Body: fileBuffer,
+          ContentType: file.type,
+        };
 
-    Object.values(files).forEach((fileValue) => {
-      if (Array.isArray(fileValue)) {
-        fileValue.forEach((file) => {
-          if (file) fileArray.push(file);
-        });
-      } else if (fileValue) {
-        fileArray.push(fileValue as File);
+        const uploadPromise = s3.send(new PutObjectCommand(uploadParams))
+          .then(() => {
+            console.info(`Successfully uploaded ${file.name}`);
+            return { file: file.name, status: "Uploaded" };
+          })
+          .catch((uploadErr) => {
+            console.error(`Failed to upload ${file.name}`, { error: uploadErr });
+            return { file: file.name, status: "Failed", error: uploadErr.message };
+          });
+
+        fileUploadPromises.push(uploadPromise);
       }
     });
 
-    const uploadPromises = fileArray.map((file) => uploadFile(file));
-    const results = await Promise.all(uploadPromises);
-
-    return NextResponse.json({ files: results }, { status: 200 });
-  } catch (error) {
-    return NextResponse.json({ error: 'Error uploading the files' }, { status: 500 });
+    // Await all file upload promises
+    const results = await Promise.all(fileUploadPromises);
+    console.info("Upload results:", { results });
+    return NextResponse.json({ files: results });
+  } catch (err) {
+    console.error("Error parsing or uploading files", { error: err });
+    return NextResponse.json({ error: "Error parsing or uploading files" }, { status: 500 });
   }
 }
