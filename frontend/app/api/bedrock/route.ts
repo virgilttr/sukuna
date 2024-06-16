@@ -77,8 +77,8 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   const res = await request.json();
-  console.log(res);
-  const respnse = callBedrockKnowledgeBase(res.prompt);
+  const respnse = await callBedrockKnowledgeBase(res.prompt);
+  console.log(respnse);
   return new Response(JSON.stringify(respnse), {
     headers: { "Content-Type": "application/json" },
   });

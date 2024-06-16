@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input"
 const FileUpload: React.FC = () => {
   const [files, setFiles] = useState<File[]>([]);
   const [progress, setProgress] = useState<{ [key: string]: number }>({});
+  const [uploadComplete, setUploadComplete] = useState<boolean>(false);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -21,6 +22,7 @@ const FileUpload: React.FC = () => {
 
     const promises = files.map(file => uploadFile(file));
     await Promise.all(promises);
+    setUploadComplete(true); // Set uploadComplete to true after all files are uploaded
   };
 
   const uploadFile = async (file: File) => {
@@ -54,6 +56,11 @@ const FileUpload: React.FC = () => {
           <progress value={progress[file.name] || 0} max="100">{progress[file.name] || 0}%</progress>
         </div>
       ))}
+      {uploadComplete && (
+        <div className="mt-4 text-green-500">
+          All files have been successfully uploaded! Please ask your questions to the AI now
+        </div>
+      )}
     </div>
   );
 };

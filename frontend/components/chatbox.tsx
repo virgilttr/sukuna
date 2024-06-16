@@ -1,16 +1,17 @@
 "use client"
 
+import React, { useState } from 'react';
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
-import React, { useState } from 'react';
 
 interface Message {
   id: number;
   text: string;
   sender: 'user' | 'ai';
   citation?: string;
+  citation_link?: string;
 }
 
 export default function Chatbox() {
@@ -21,7 +22,7 @@ export default function Chatbox() {
     setInputValue(e.target.value);
   };
 
-  const handleSubmit = async () => { 
+  const handleSubmit = async () => {
     if (!inputValue.trim()) return;
 
     const userMessage: Message = {
@@ -30,7 +31,7 @@ export default function Chatbox() {
       sender: 'user'
     };
 
-    setMessages([...messages, userMessage]);
+    setMessages(prevMessages => [...prevMessages, userMessage]); // Ensure message is added immediately
 
     try {
       const response = await fetch('/api/bedrock', {
@@ -42,20 +43,24 @@ export default function Chatbox() {
       });
 
       const data = await response.json();
+      console.log(data);
+      if (data.output) {
+        const aiMessage: Message = {
+          id: messages.length + 2,
+          text: data.output.text,
+          sender: 'ai',
+          citation: data.markdownCitations
+        };
 
-      const aiMessage: Message = {
-        id: messages.length + 2,
-        text: data.output,
-        sender: 'ai',
-        citation: data.markdownCitations
-      };
-
-      setMessages(prevMessages => [...prevMessages, aiMessage]);
+        setMessages(prevMessages => [...prevMessages, aiMessage]);
+      } else {
+        console.log('No output from AI');
+      }
     } catch (error) {
       console.error('Error fetching AI response:', error);
     }
 
-    setInputValue('');
+    setInputValue(''); // Clear input after sending
   };
 
   return (
