@@ -15,22 +15,6 @@ const s3 = new S3Client({
   credentials: fromEnv(),
 });
 
-async function streamToBuffer(stream: ReadableStream): Promise<Buffer> {
-  const reader = stream.getReader();
-  const chunks: Uint8Array[] = [];
-  let done: boolean = false;
-
-  while (!done) {
-    const { value, done: chunkDone } = await reader.read();
-    if (value) {
-      chunks.push(value);
-    }
-    done = chunkDone;
-  }
-
-  return Buffer.concat(chunks);
-}
-
 export async function POST(req: NextRequest) {
   console.info("Received a POST request");
 
@@ -40,12 +24,11 @@ export async function POST(req: NextRequest) {
 
     formData.forEach(async (value, key) => {
       if (value instanceof File) {
-        const file = value;
-        const fileBuffer = await streamToBuffer(file.stream());
+        const file = formData.get("file") as File;        
         const uploadParams = {
           Bucket: process.env.S3_BUCKET_NAME as string, // replace with your S3 bucket name
           Key: file.name,
-          Body: fileBuffer,
+          Body: Buffer.from(await file.arrayBuffer()),
           ContentType: file.type,
         };
 
