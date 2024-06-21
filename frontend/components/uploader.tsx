@@ -1,5 +1,4 @@
 "use client"
-
 import React, { useState } from 'react';
 import { Input } from "@/components/ui/input"
 
@@ -13,25 +12,23 @@ const FileUpload: React.FC = () => {
       setFiles(Array.from(event.target.files));
     }
   };
+
   const uploadFiles = async () => {
     const uploadProgress: { [key: string]: number } = {};
     files.forEach(file => {
       uploadProgress[file.name] = 0;
     });
     setProgress(uploadProgress);
-
     const promises = files.map(file => uploadFile(file));
     await Promise.all(promises);
-    setUploadComplete(true); // Set uploadComplete to true after all files are uploaded
+    setUploadComplete(true);
   };
 
   const uploadFile = async (file: File) => {
     const formData = new FormData();
     formData.append('file', file);
-
     const xhr = new XMLHttpRequest();
     xhr.open('POST', '/api/upload', true);
-
     xhr.upload.onprogress = (event) => {
       if (event.lengthComputable) {
         setProgress(prevProgress => ({
@@ -40,20 +37,33 @@ const FileUpload: React.FC = () => {
         }));
       }
     };
-
     xhr.send(formData);
   };
 
   return (
-    <div>
-      <Input type="file" multiple onChange={handleFileChange} className="mb-4" />
-      <button onClick={uploadFiles} className="bg-blue-500 text-white px-4 py-2 rounded">
+    <div className="space-y-4">
+      <Input 
+        type="file" 
+        multiple 
+        onChange={handleFileChange} 
+        className="bg-zinc-900 border-zinc-700 text-zinc-300"
+      />
+      <button 
+        onClick={uploadFiles} 
+        className="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 px-4 py-2 rounded-md transition duration-200 ease-in-out"
+      >
         Upload
       </button>
       {files.map(file => (
-        <div key={file.name}>
+        <div key={file.name} className="text-zinc-300">
           <span>{file.name}</span>
-          <progress value={progress[file.name] || 0} max="100">{progress[file.name] || 0}%</progress>
+          <progress 
+            value={progress[file.name] || 0} 
+            max="100" 
+            className="w-full h-2 bg-zinc-700"
+          >
+            {progress[file.name] || 0}%
+          </progress>
         </div>
       ))}
       {uploadComplete && (
