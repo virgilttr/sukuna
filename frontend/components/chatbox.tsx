@@ -64,46 +64,43 @@ export default function Chatbox() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-black text-gray-300">
-      <header className="flex items-center justify-between px-6 py-4 bg-zinc-950 border-b border-zinc-800">
-        <div className="flex items-center gap-3">
-          <Avatar className="w-10 h-10 border-2 border-zinc-700">
+    <div className="flex flex-col h-[calc(100vh-12rem)] max-h-[800px]">
+      <header className="flex items-center justify-between px-4 py-2 bg-zinc-800 border-b border-zinc-700">
+        <div className="flex items-center gap-2">
+          <Avatar className="w-6 h-6">
             <AvatarImage src="/placeholder-user.jpg" />
-            <AvatarFallback className="bg-zinc-800 text-zinc-400">AI</AvatarFallback>
+            <AvatarFallback>AI</AvatarFallback>
           </Avatar>
-          <h3 className="text-xl font-semibold text-zinc-300">Findevor</h3>
+          <h3 className="text-sm font-medium">Findevor AI</h3>
         </div>
-        <Button variant="ghost" size="icon" className="rounded-full text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800">
-          <XIcon className="w-6 h-6" />
-          <span className="sr-only">Close</span>
-        </Button>
       </header>
-      <ScrollArea className="flex-1 p-6 overflow-auto">
-        <div className="space-y-6">
+      <ScrollArea className="flex-1 p-4">
+        <div className="space-y-4">
           {messages.map(message => (
             <div key={message.id} className={`flex ${message.sender === 'ai' ? 'justify-start' : 'justify-end'}`}>
-              <div className={`rounded-lg p-4 max-w-[70%] ${message.sender === 'ai' ? 'bg-zinc-900' : 'bg-zinc-800'}`}>
-                <p className="text-sm">{message.text}</p>
-                {message.citation && <p className="mt-2 text-xs text-zinc-500">{message.citation}</p>}
+              <div className={`rounded-lg p-2 max-w-[80%] text-sm ${message.sender === 'ai' ? 'bg-zinc-800' : 'bg-zinc-700'}`}>
+                <p>{message.text}</p>
+                {message.citation && <p className="mt-1 text-xs text-zinc-400">{message.citation}</p>}
               </div>
             </div>
           ))}
         </div>
       </ScrollArea>
-      <div className="flex items-center gap-4 px-6 py-4 bg-zinc-950 border-t border-zinc-800">
+      <div className="flex items-center gap-2 p-2 bg-zinc-800 border-t border-zinc-700">
         <Textarea
           placeholder="Type your message..."
-          className="flex-1 bg-zinc-900 border-zinc-700 focus:border-zinc-600 focus:ring focus:ring-zinc-700 focus:ring-opacity-50 rounded-lg resize-none text-zinc-300 placeholder-zinc-600"
+          className="flex-1 bg-zinc-700 border-none focus:ring-0 resize-none text-sm min-h-[2.5rem] max-h-[5rem]"
           value={inputValue}
           onChange={handleInputChange}
+          rows={1}
         />
-        <Button onClick={handleSubmit} className="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-full p-3">
-          <SendIcon className="w-5 h-5" />
+        <Button onClick={handleSubmit} size="sm" className="bg-zinc-700 hover:bg-zinc-600">
+          <SendIcon className="w-4 h-4" />
           <span className="sr-only">Send</span>
         </Button>
       </div>
-    </div>  
-);  
+    </div>
+  );  
 }
 
 function SendIcon(props: React.SVGProps<SVGSVGElement>) {
