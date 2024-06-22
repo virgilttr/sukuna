@@ -66,11 +66,6 @@ const FileUpload: React.FC = () => {
           </div>
         </div>
       ))}
-      {uploadComplete && (
-        <div className="mt-4 text-green-500">
-          All files have been successfully uploaded! Please ask your questions to the AI now
-        </div>
-      )}
     </div>
   );
 };
