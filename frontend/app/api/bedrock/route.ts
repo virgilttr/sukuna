@@ -65,16 +65,6 @@ async function callBedrockKnowledgeBase(prompt: string) {
   }
 }
 
-export async function GET() {
-  const result = callBedrockKnowledgeBase(
-    "what are comparable sales in the area of Baton Rouge?"
-  );
-
-  return new Response(JSON.stringify(result), {
-    headers: { "Content-Type": "application/json" },
-  });
-}
-
 export async function POST(request: NextRequest) {
   const res = await request.json();
   const respnse = await callBedrockKnowledgeBase(res.prompt);
