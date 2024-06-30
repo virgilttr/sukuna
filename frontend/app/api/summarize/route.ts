@@ -6,7 +6,7 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 const s3Client = new S3Client({ region: process.env.AWS_REGION });
 const bedrockClient = new BedrockRuntimeClient({ region: process.env.AWS_REGION });
 
-const MAX_CHUNK_SIZE = 20000; // Adjust this based on your needs and Bedrock's limits
+const MAX_CHUNK_SIZE = 2500; // Adjust this based on your needs and Bedrock's limits
 
 export async function POST(request: NextRequest) {
   const { files } = await request.json();
@@ -18,9 +18,8 @@ export async function POST(request: NextRequest) {
     // Chunk documents and summarize each chunk
     const chunks = chunkDocuments(documents);
     const chunkSummaries = await Promise.all(chunks.map(generateSummaryWithBedrock));
-    console.log(chunkSummaries);
     // Generate final summary
-    const finalSummary = await generateSummaryWithBedrock(chunkSummaries.join('\n\n'));
+    const finalSummary = await generateFinalSummary(chunkSummaries.join('\n\n'));
     console.log(finalSummary);
 
     // Upload summary to S3 and get URL
@@ -81,26 +80,77 @@ async function streamToString(stream: any): Promise<string> {
   return Buffer.concat(chunks).toString('utf-8');
 }
 
-async function generateSummaryWithBedrock(text: string): Promise<string> {
-    const prompt = `Human: Please summarize the following document, from the perspective on a real estate investor. Highlight all aspects that could influence the return on investment:
-
-    ${text}
-    
-    Assistant: Here's a concise summary of the text:"`;  
+async function generateFinalSummary(text: string): Promise<string> {
+  const prompt = `
+  You are a real estate analyst. The following pieces into a cohesive investment report, involving all elements that could possible invovle the future cash flow.
+  Please Start the report with the text: INVESTMENT REPORT FINDEVOR: 
+  ${text}
+  Please end the report with the text: END OF REPORT
+  `;
   const command = new InvokeModelCommand({
-    modelId: "anthropic.claude-3-haiku-20240307-v1:0", // or your preferred model
+    modelId: "meta.llama3-8b-instruct-v1:0", // Llama 2 70B model
     contentType: "application/json",
     accept: "application/json",
     body: JSON.stringify({
       prompt: prompt,
-      max_tokens_to_sample: 1000,
+      max_gen_len: 512,
       temperature: 0.5,
+      top_p: 0.9,
     }),
   });
-
   const response = await bedrockClient.send(command);
   const responseBody = JSON.parse(new TextDecoder().decode(response.body));
-  return responseBody.completion;
+  // Create an object with both request and response information
+  const logObject = {
+    request: {
+      prompt: prompt,
+      modelId: "meta.llama3-8b-instruct-v1:0",
+      parameters: {
+        max_gen_len: 512,
+        temperature: 0.5,
+        top_p: 0.9,
+      }
+    },
+    response: responseBody
+  };
+  // Log the entire object as JSON
+  console.log(JSON.stringify(logObject, null, 2));  
+  return responseBody.generation;
+}
+
+
+async function generateSummaryWithBedrock(text: string): Promise<string> {
+  const prompt = `You are a real estate analyst. Please summarize the key information in this text that you find would be most relevant for an investor:
+  ${text}
+  `;
+  const command = new InvokeModelCommand({
+    modelId: "meta.llama3-8b-instruct-v1:0", // Llama 2 70B model
+    contentType: "application/json",
+    accept: "application/json",
+    body: JSON.stringify({
+      prompt: prompt,
+      max_gen_len: 512,
+      temperature: 0.5,
+      top_p: 0.9,
+    }),
+  });
+  const response = await bedrockClient.send(command);
+  const responseBody = JSON.parse(new TextDecoder().decode(response.body));
+  const logObject = {
+    request: {
+      prompt: prompt,
+      modelId: "meta.llama3-8b-instruct-v1:0",
+      parameters: {
+        max_gen_len: 512,
+        temperature: 0.5,
+        top_p: 0.9,
+      }
+    },
+    response: responseBody
+  };
+  // Log the entire object as JSON
+  console.log(JSON.stringify(logObject, null, 2));  
+  return responseBody.generation;
 }
 
 async function uploadSummaryToS3AndGetUrl(summary: string): Promise<string> {
