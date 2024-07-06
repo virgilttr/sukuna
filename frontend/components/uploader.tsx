@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { FileInput } from "@/components/ui/input"; // Update the import path as needed
 import Link from "next/link";
 
 const FileUpload: React.FC = () => {
@@ -10,40 +9,45 @@ const FileUpload: React.FC = () => {
   const [summaryUrl, setSummaryUrl] = useState<string | null>(null);
   const [isSummarizing, setIsSummarizing] = useState<boolean>(false);
   const [uploadPrefix, setUploadPrefix] = useState<string>("");
+  const [summary, setSummary] = useState<string>("");
+  const [showSummary, setShowSummary] = useState(false);
 
   useEffect(() => {
-    // Generate a unique prefix when the component mounts
     setUploadPrefix(
       `upload_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`
     );
   }, []);
 
-  const handleFileChange = (fileList: FileList | null) => {
-    if (fileList) {
-      setFiles(Array.from(fileList));
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      setFiles(Array.from(event.target.files));
     }
   };
 
   const requestSummary = async () => {
     setIsSummarizing(true);
+    setShowSummary(true);
+    setSummary("Generating summary...");
     try {
       const response = await fetch("/api/summarize", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ files: files.map((f) => f.name) }),
+        body: JSON.stringify({
+          prefix: uploadPrefix,
+        }),
       });
-
       if (!response.ok) {
         throw new Error("Failed to generate summary");
       }
-
       const data = await response.json();
+      // Make sure we're accessing the correct property of the response
+      setSummary(data.summary || "No summary generated");
       setSummaryUrl(data.summaryUrl);
     } catch (error) {
       console.error("Error generating summary:", error);
-      // Handle error (e.g., show an error message to the user)
+      setSummary("Failed to generate summary. Please try again.");
     } finally {
       setIsSummarizing(false);
     }
@@ -79,11 +83,12 @@ const FileUpload: React.FC = () => {
 
   return (
     <div className="space-y-4">
-      <FileInput
+      <input
+        type="file"
         multiple
-        onFileChange={handleFileChange}
-        id="file-upload"
-        accept=".pdf,.txt,.xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        onChange={handleFileChange}
+        className="w-full text-zinc-300"
+        accept=".pdf,.txt,.xlsx"
       />
       <button
         onClick={uploadFiles}
@@ -94,6 +99,7 @@ const FileUpload: React.FC = () => {
           ? `Upload ${files.length} file${files.length > 1 ? "s" : ""}`
           : "Select files to upload"}
       </button>
+
       {uploadComplete && (
         <button
           onClick={requestSummary}
@@ -112,6 +118,7 @@ const FileUpload: React.FC = () => {
           Download Summary
         </Link>
       )}
+
       {files.map((file) => (
         <div key={file.name} className="text-zinc-300">
           <span>{file.name}</span>
@@ -123,6 +130,47 @@ const FileUpload: React.FC = () => {
           </div>
         </div>
       ))}
+
+      {summary && (
+        <button
+          onClick={() => setShowSummary(!showSummary)}
+          className="w-full bg-zinc-600 hover:bg-zinc-500 text-zinc-200 px-4 py-2 rounded-md transition duration-200 ease-in-out"
+        >
+          {showSummary ? "Hide Summary" : "Show Summary"}
+        </button>
+      )}
+
+      {showSummary && summary && (
+        <div className="mt-4 p-4 bg-zinc-800 rounded-md">
+          <h3 className="text-lg font-semibold mb-2 text-zinc-200">Summary</h3>
+          <textarea
+            className="w-full h-64 p-2 border rounded-md bg-zinc-700 text-zinc-300"
+            value={summary}
+            readOnly
+          />
+          <div className="mt-2 space-x-2">
+            <button
+              onClick={() => navigator.clipboard.writeText(summary)}
+              className="bg-zinc-600 hover:bg-zinc-500 text-zinc-200 px-3 py-1 rounded-md"
+            >
+              Copy
+            </button>
+            <button
+              onClick={() => {
+                const blob = new Blob([summary], { type: "text/plain" });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = "summary.txt";
+                a.click();
+              }}
+              className="bg-zinc-600 hover:bg-zinc-500 text-zinc-200 px-3 py-1 rounded-md"
+            >
+              Save as File
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
