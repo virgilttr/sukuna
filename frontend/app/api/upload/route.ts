@@ -20,6 +20,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const formData = await req.formData();
+    const prefix = formData.get('prefix') as string;  // Get the prefix from the form data
     const fileUploadPromises: Promise<any>[] = [];
 
     formData.forEach(async (value, key) => {
@@ -27,7 +28,7 @@ export async function POST(req: NextRequest) {
         const file = formData.get("file") as File;        
         const uploadParams = {
           Bucket: process.env.S3_BUCKET_NAME as string, // replace with your S3 bucket name
-          Key: file.name,
+          Key: `${prefix}/${file.name}`,  // Use the prefix in the S3 key         
           Body: Buffer.from(await file.arrayBuffer()),
           ContentType: file.type,
         };

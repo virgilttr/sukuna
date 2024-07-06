@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FileInput } from "@/components/ui/input"  // Update the import path as needed
 import Link from 'next/link';
 
@@ -10,6 +10,12 @@ const FileUpload: React.FC = () => {
   const [uploadComplete, setUploadComplete] = useState<boolean>(false);
   const [summaryUrl, setSummaryUrl] = useState<string | null>(null);
   const [isSummarizing, setIsSummarizing] = useState<boolean>(false);
+  const [uploadPrefix, setUploadPrefix] = useState<string>('');
+
+  useEffect(() => {
+    // Generate a unique prefix when the component mounts
+    setUploadPrefix(`upload_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`);
+  }, []);
 
   const handleFileChange = (fileList: FileList | null) => {
     if (fileList) {
@@ -56,6 +62,7 @@ const FileUpload: React.FC = () => {
   const uploadFile = async (file: File) => {
     const formData = new FormData();
     formData.append('file', file);
+    formData.append('prefix', uploadPrefix);
     const xhr = new XMLHttpRequest();
     xhr.open('POST', '/api/upload', true);
     xhr.upload.onprogress = (event) => {
@@ -75,8 +82,7 @@ const FileUpload: React.FC = () => {
         multiple 
         onFileChange={handleFileChange}
         id="file-upload"
-        accept=".pdf,.txt"  // Specify accepted file types
-      />
+        accept=".pdf,.txt,.xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
       <button 
         onClick={uploadFiles} 
         className="w-full bg-zinc-800 hover:bg-zinc-700 text-zinc-300 px-4 py-2 rounded-md transition duration-200 ease-in-out"
