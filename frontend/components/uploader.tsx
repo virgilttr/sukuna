@@ -24,25 +24,36 @@ const FileUpload: React.FC = () => {
     }
   };
 
+  //TODO: Validate 1. Maximum 5 documents 2. Maximum document size 3. documents formats 4. Documents naming
   const requestSummary = async () => {
     setIsSummarizing(true);
     setShowSummary(true);
     setSummary("Generating summary...");
     try {
+      const fileContents = await Promise.all(
+        files.map(async (file) => {
+          const arrayBuffer = await file.arrayBuffer();
+          return {
+            name: file.name,
+            type: file.type,
+            content: Array.from(new Uint8Array(arrayBuffer)),
+          };
+        })
+      );
+
       const response = await fetch("/api/summarize", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          prefix: uploadPrefix,
+          files: fileContents,
         }),
       });
       if (!response.ok) {
         throw new Error("Failed to generate summary");
       }
       const data = await response.json();
-      // Make sure we're accessing the correct property of the response
       setSummary(data.summary || "No summary generated");
       setSummaryUrl(data.summaryUrl);
     } catch (error) {
@@ -90,25 +101,24 @@ const FileUpload: React.FC = () => {
         className="w-full text-zinc-300"
         accept=".pdf,.txt,.xlsx"
       />
-      <button
-        onClick={uploadFiles}
-        className="w-full bg-zinc-800 hover:bg-zinc-700 text-zinc-300 px-4 py-2 rounded-md transition duration-200 ease-in-out"
-        disabled={files.length === 0}
-      >
-        {files.length > 0
-          ? `Upload ${files.length} file${files.length > 1 ? "s" : ""}`
-          : "Select files to upload"}
-      </button>
-
-      {uploadComplete && (
+      <div className="flex space-x-2">
+        <button
+          onClick={uploadFiles}
+          className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 px-4 py-2 rounded-md transition duration-200 ease-in-out"
+          disabled={files.length === 0}
+        >
+          {files.length > 0
+            ? `Upload ${files.length} file${files.length > 1 ? "s" : ""}`
+            : "Select files to upload"}
+        </button>
         <button
           onClick={requestSummary}
-          className="w-full bg-zinc-600 hover:bg-zinc-500 text-zinc-200 px-4 py-2 rounded-md transition duration-200 ease-in-out"
-          disabled={isSummarizing}
+          className="flex-1 bg-zinc-600 hover:bg-zinc-500 text-zinc-200 px-4 py-2 rounded-md transition duration-200 ease-in-out"
+          disabled={files.length === 0 || isSummarizing}
         >
           {isSummarizing ? "Generating Summary..." : "Generate Summary"}
         </button>
-      )}
+      </div>
 
       {summaryUrl && (
         <Link

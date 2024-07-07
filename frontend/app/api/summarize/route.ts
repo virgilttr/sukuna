@@ -1,128 +1,120 @@
-import "server-only";
 import {
-  BedrockAgentRuntime,
-  RetrieveAndGenerateCommand,
-  RetrieveAndGenerateType,
-} from "@aws-sdk/client-bedrock-agent-runtime";
+  BedrockRuntimeClient,
+  ConverseCommand,
+  Message,
+  DocumentFormat,
+} from "@aws-sdk/client-bedrock-runtime";
 import { NextRequest } from "next/server";
 import { fromEnv } from "@aws-sdk/credential-providers";
 
-const S3_BUCKET_NAME = process.env.S3_BUCKET_NAME || "findevor-mvp";
-
-const bedrock = new BedrockAgentRuntime({
+const bedrock = new BedrockRuntimeClient({
   region: "us-east-1",
   credentials: fromEnv(),
 });
 
-async function callBedrockKnowledgeBase(prompt: string, prefix: string) {
-  const knowledgeBaseId = process.env.KNOWLEDGE_BASE_ID;
-  const command = new RetrieveAndGenerateCommand({
-    input: {
-      text: prompt,
-    },
-    retrieveAndGenerateConfiguration: {
-      type: RetrieveAndGenerateType.KNOWLEDGE_BASE,
-      knowledgeBaseConfiguration: {
-        knowledgeBaseId: knowledgeBaseId,
-        modelArn: "anthropic.claude-3-haiku-20240307-v1:0",
-        retrievalConfiguration: {
-          vectorSearchConfiguration: {
-            numberOfResults: 10,
-            /* filter: {
-              startsWith: {
-                key: "x-amz-bedrock-kb-source-uri",
-                value: `s3://${S3_BUCKET_NAME}/${prefix}/`,
-              },
-            }, TODO: Not suppored while using Pinecone*/
-          },
-        },
-        /*         generationConfiguration: {
-          promptTemplate: {
-            textPromptTemplate: `\n\nHuman: You will be acting as a real estate analyst for Findevor. Provide a summarized answer that uses all the information retrieved from the search results to make a coherent report for a real estate investor.
-            If there are no results, say you cannot determine the information from the existing documents.
-            Here is the relevant information in numbered order from our knowledge base: $search_results$
-            User query: $query$\n\nAssistant:`,
-          },
-        }, */
-      },
-    },
-  });
+interface FileContent {
+  name: string;
+  type: string;
+  content: number[];
+}
 
-  try {
-    const response = await bedrock.send(command);
-    if (response.output) {
-      console.log(response.output);
-      let markdownCitations = "";
-      const urls = new Set();
-      response.citations?.forEach((citation) => {
-        citation.retrievedReferences?.forEach((reference) => {
-          markdownCitations += "\n\n***\n\n <br>";
-          if (reference.content?.text) {
-            markdownCitations += `\n\n ${reference.content.text}`;
-          }
-          if (reference.location?.type === "S3") {
-            const uri = reference.location.s3Location?.uri;
-            if (uri) {
-              urls.add(uri);
-            }
-          }
-        });
-      });
-      console.log(markdownCitations);
-      console.log(urls);
-      return {
-        output: response.output ?? "",
-        citations: markdownCitations,
-        markdownCitations: markdownCitations,
-        urls: Array.from(urls),
-      };
-    }
-  } catch (error) {
-    console.log(error);
+interface RequestBody {
+  files: FileContent[];
+}
+
+//TODO Add support for images which is different from Document Type
+function getDocumentFormat(fileType: string): DocumentFormat {
+  const extension = fileType.split("/")[1].toLowerCase();
+  switch (extension) {
+    case "pdf":
+      return DocumentFormat.PDF;
+    case "txt":
+      return DocumentFormat.TXT;
+    case "html":
+      return DocumentFormat.HTML;
+    case "docx":
+      return DocumentFormat.DOCX;
+    case "xlsx":
+      return DocumentFormat.XLSX;
+    case "csv":
+      return DocumentFormat.CSV;
+    case "xls":
+      return DocumentFormat.XLS;
+    // Add more cases as needed
+    default:
+      return DocumentFormat.TXT; // Default to plain text if unknown
   }
 }
 
-export async function POST(request: NextRequest) {
-  const res = await request.json();
-  const prefix = res.prefix;
+// Helper function to remove file extension
+function removeFileExtension(filename: string): string {
+  return filename.replace(/\.[^/.]+$/, "");
+}
 
-  const prompts = [
-    "What are the key informations about this property? Where is it located, what are the main investment benefits, and what are the biggest risks?.",
-    "What do the financials of this property look like? What have been the biggest sources of revenue and biggest costs recently?",
+export async function POST(request: NextRequest) {
+  const res = (await request.json()) as RequestBody;
+  const files = res.files;
+  const prompt =
+    "Based on the rent rolls and the income, what do you think about this property as a cash flow vehicle for an investor? Will there be tenant turnover soon? Is there risk of a large maintenance bill coming soon? Please be through in your analysis";
+
+  const messages: Message[] = [
+    {
+      role: "user",
+      content: [
+        {
+          text: prompt,
+        },
+        ...files.map((file: FileContent) => ({
+          document: {
+            format: getDocumentFormat(file.type),
+            name: removeFileExtension(file.name),
+            source: {
+              bytes: new Uint8Array(file.content),
+            },
+          },
+        })),
+      ],
+    },
   ];
 
-  const results = await Promise.all(
-    prompts.map((prompt) => callBedrockKnowledgeBase(prompt, prefix))
-  );
+  try {
+    const command = new ConverseCommand({
+      modelId: "anthropic.claude-3-haiku-20240307-v1:0",
+      messages: messages,
+      inferenceConfig: { maxTokens: 4096, temperature: 0.5, topP: 0.9 },
+    });
 
-  // Combine the results
-  let combinedOutput = "";
-  let combinedCitations = "";
-  const combinedUrls = new Set();
+    const response = await bedrock.send(command);
+    console.log(response);
 
-  results.forEach((result, index) => {
-    if (result) {
-      combinedOutput += `\n\n--- Summary ${index + 1} ---\n\n${result.output}`;
-      combinedCitations += result.citations;
-      result.urls.forEach((url) => combinedUrls.add(url));
+    const content = response.output?.message?.content;
+
+    let responseText = "No response generated.";
+
+    if (
+      Array.isArray(content) &&
+      content.length > 0 &&
+      typeof content[0].text === "string"
+    ) {
+      responseText = content[0].text;
     }
-  });
 
-  // Generate a final summary
-  const finalSummaryPrompt = `Based on the following summaries, provide a comprehensive overview for a real estate investor:\n\n${combinedOutput}`;
-  const finalSummary = await callBedrockKnowledgeBase(
-    finalSummaryPrompt,
-    prefix
-  );
-
-  const response = {
-    summary: finalSummary ? finalSummary.output : "Failed to generate summary.",
-    citations: combinedCitations + (finalSummary ? finalSummary.citations : ""),
-    urls: Array.from(combinedUrls),
-  };
-
-  console.log(response);
-  return new Response(JSON.stringify(response), {
-    headers: { "Content-Type": "application/json" },
-  });
+    return new Response(
+      JSON.stringify({
+        summary: responseText,
+      }),
+      {
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+  } catch (error) {
+    console.error("Error calling Bedrock Converse API:", error);
+    return new Response(
+      JSON.stringify({ error: "Failed to generate summary" }),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+  }
 }
