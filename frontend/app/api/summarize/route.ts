@@ -1,10 +1,10 @@
+export const maxDuration = 30;
 import {
   BedrockRuntimeClient,
   ConverseCommand,
   Message,
+  DocumentFormat,
 } from "@aws-sdk/client-bedrock-runtime";
-// @ts-ignore
-import { DocumentFormat } from "@aws-sdk/client-bedrock-runtime";
 import { NextRequest } from "next/server";
 import { fromEnv } from "@aws-sdk/credential-providers";
 
@@ -23,7 +23,7 @@ interface RequestBody {
   files: FileContent[];
 }
 
-//TODO Add support for images which is d ifferent from Document Type
+//TODO Add support for images which is different from Document Type
 function getDocumentFormat(fileType: string): DocumentFormat {
   const extension = fileType.split("/")[1].toLowerCase();
   switch (extension) {
