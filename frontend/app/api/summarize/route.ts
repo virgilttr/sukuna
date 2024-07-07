@@ -23,7 +23,7 @@ interface RequestBody {
   files: FileContent[];
 }
 
-//TODO Add support for images which is different from Document Type
+//TODO Add support for images which is d ifferent from Document Type
 function getDocumentFormat(fileType: string): DocumentFormat {
   const extension = fileType.split("/")[1].toLowerCase();
   switch (extension) {
