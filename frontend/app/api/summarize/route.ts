@@ -41,6 +41,8 @@ function getDocumentFormat(fileType: string): DocumentFormat {
       return DocumentFormat.CSV;
     case "xls":
       return DocumentFormat.XLS;
+    case "doc":
+      return DocumentFormat.DOC;
     // Add more cases as needed
     default:
       return DocumentFormat.TXT; // Default to plain text if unknown
@@ -56,7 +58,7 @@ export async function POST(request: NextRequest) {
   const res = (await request.json()) as RequestBody;
   const files = res.files;
   const prompt =
-    "Based on the rent rolls and the income, what do you think about this property as a cash flow vehicle for an investor? Will there be tenant turnover soon? Is there risk of a large maintenance bill coming soon? Please be through in your analysis";
+    "You are a real estate analyst. Based on the provided documents on the property, what do you think about this property as an investor? Will there be tenant turnover soon, or is there risk of a large maintenance bill coming? Please synthesize the most important facts about the property for your investor.";
 
   const messages: Message[] = [
     {
