@@ -2,8 +2,9 @@ import {
   BedrockRuntimeClient,
   ConverseCommand,
   Message,
-  DocumentFormat,
 } from "@aws-sdk/client-bedrock-runtime";
+// @ts-ignore
+import { DocumentFormat } from "@aws-sdk/client-bedrock-runtime";
 import { NextRequest } from "next/server";
 import { fromEnv } from "@aws-sdk/credential-providers";
 
