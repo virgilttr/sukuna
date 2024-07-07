@@ -36,13 +36,14 @@ async function callBedrockKnowledgeBase(prompt: string, prefix: string) {
             }, TODO: Not suppored while using Pinecone*/
           },
         },
-        generationConfiguration: {
+        /*         generationConfiguration: {
           promptTemplate: {
             textPromptTemplate: `\n\nHuman: You will be acting as a real estate analyst for Findevor. Provide a summarized answer that uses all the information retrieved from the search results to make a coherent report for a real estate investor.
-      Here is the relevant information in numbered order from our knowledge base: $search_results$
-      User query: $query$\n\nAssistant:`,
+            If there are no results, say you cannot determine the information from the existing documents.
+            Here is the relevant information in numbered order from our knowledge base: $search_results$
+            User query: $query$\n\nAssistant:`,
           },
-        },
+        }, */
       },
     },
   });
