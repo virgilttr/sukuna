@@ -23,7 +23,7 @@ const Home: React.FC = () => {
               </h2>
               <ol className="list-decimal list-inside space-y-2">
                 <li>
-                  Select the files you'd like to use for your report below
+                  Select the files you would like to use for your report below
                   (word, PDF, excel, pictures).
                 </li>
                 <li>Wait for the upload to complete.</li>
