@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -9,14 +9,14 @@ import { Textarea } from "@/components/ui/textarea";
 interface Message {
   id: number;
   text: string;
-  sender: 'user' | 'ai';
+  sender: "user" | "ai";
   citation?: string;
   citation_link?: string;
 }
 
 export default function Chatbox() {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputValue(e.target.value);
@@ -28,18 +28,18 @@ export default function Chatbox() {
     const userMessage: Message = {
       id: messages.length + 1,
       text: inputValue,
-      sender: 'user'
+      sender: "user",
     };
 
-    setMessages(prevMessages => [...prevMessages, userMessage]); // Ensure message is added immediately
+    setMessages((prevMessages) => [...prevMessages, userMessage]); // Ensure message is added immediately
 
     try {
-      const response = await fetch('/api/bedrock', {
-        method: 'POST',
+      const response = await fetch("/api/bedrock", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ prompt: inputValue })
+        body: JSON.stringify({ prompt: inputValue }),
       });
 
       const data = await response.json();
@@ -48,19 +48,19 @@ export default function Chatbox() {
         const aiMessage: Message = {
           id: messages.length + 2,
           text: data.output.text,
-          sender: 'ai',
-          citation: data.markdownCitations
+          sender: "ai",
+          citation: data.markdownCitations,
         };
 
-        setMessages(prevMessages => [...prevMessages, aiMessage]);
+        setMessages((prevMessages) => [...prevMessages, aiMessage]);
       } else {
-        console.log('No output from AI');
+        console.log("No output from AI");
       }
     } catch (error) {
-      console.error('Error fetching AI response:', error);
+      console.error("Error fetching AI response:", error);
     }
 
-    setInputValue(''); // Clear input after sending
+    setInputValue(""); // Clear input after sending
   };
 
   return (
@@ -71,16 +71,31 @@ export default function Chatbox() {
             <AvatarImage src="/placeholder-user.jpg" />
             <AvatarFallback>AI</AvatarFallback>
           </Avatar>
-          <h3 className="text-sm font-medium">Findevor AI</h3>
+          <h3 className="text-sm font-medium">
+            Artificially Intelligent Real Estate Assistant
+          </h3>
         </div>
       </header>
       <ScrollArea className="flex-1 p-4">
         <div className="space-y-4">
-          {messages.map(message => (
-            <div key={message.id} className={`flex ${message.sender === 'ai' ? 'justify-start' : 'justify-end'}`}>
-              <div className={`rounded-lg p-2 max-w-[80%] text-sm ${message.sender === 'ai' ? 'bg-zinc-800' : 'bg-zinc-700'}`}>
+          {messages.map((message) => (
+            <div
+              key={message.id}
+              className={`flex ${
+                message.sender === "ai" ? "justify-start" : "justify-end"
+              }`}
+            >
+              <div
+                className={`rounded-lg p-2 max-w-[80%] text-sm ${
+                  message.sender === "ai" ? "bg-zinc-800" : "bg-zinc-700"
+                }`}
+              >
                 <p>{message.text}</p>
-                {message.citation && <p className="mt-1 text-xs text-zinc-400">{message.citation}</p>}
+                {message.citation && (
+                  <p className="mt-1 text-xs text-zinc-400">
+                    {message.citation}
+                  </p>
+                )}
               </div>
             </div>
           ))}
@@ -94,13 +109,17 @@ export default function Chatbox() {
           onChange={handleInputChange}
           rows={1}
         />
-        <Button onClick={handleSubmit} size="sm" className="bg-zinc-700 hover:bg-zinc-600">
+        <Button
+          onClick={handleSubmit}
+          size="sm"
+          className="bg-zinc-700 hover:bg-zinc-600"
+        >
           <SendIcon className="w-4 h-4" />
           <span className="sr-only">Send</span>
         </Button>
       </div>
     </div>
-  );  
+  );
 }
 
 function SendIcon(props: React.SVGProps<SVGSVGElement>) {
