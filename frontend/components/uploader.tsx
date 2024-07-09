@@ -99,7 +99,7 @@ const FileUpload: React.FC = () => {
         multiple
         onChange={handleFileChange}
         className="w-full text-zinc-300"
-        accept=".pdf,.txt,.xlsx"
+        accept=".pdf,.txt,.xlsx,.docx,.doc,.csv,.xls,.jpeg,.png,.webp"
       />
       <div className="flex space-x-2">
         <button
