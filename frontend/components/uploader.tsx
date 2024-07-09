@@ -8,6 +8,9 @@ const FileUpload: React.FC = () => {
   const [isSummarizing, setIsSummarizing] = useState<boolean>(false);
   const [summary, setSummary] = useState<string>("");
   const [showSummary, setShowSummary] = useState(false);
+  const [prompt, setPrompt] = useState<string>(
+    "You are a real estate analyst. Based on the provided documents on the property, what do you think about this property as an investor? Will there be tenant turnover soon, or is there risk of a large maintenance bill coming? Please synthesize the most important facts about the property for your investor."
+  );
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,6 +63,7 @@ const FileUpload: React.FC = () => {
         },
         body: JSON.stringify({
           files: fileContents,
+          prompt: prompt,
         }),
       });
       if (!response.ok) {
@@ -122,11 +126,18 @@ const FileUpload: React.FC = () => {
           </div>
         ))}
       </div>
+      <textarea
+        value={prompt}
+        onChange={(e) => setPrompt(e.target.value)}
+        placeholder="Enter your prompt here..."
+        className="w-full p-2 border rounded-md bg-zinc-700 text-zinc-300 placeholder-zinc-500"
+        rows={5}
+      />
       <div className="flex space-x-2">
         <button
           onClick={requestSummary}
           className="flex-1 bg-zinc-600 hover:bg-zinc-500 text-zinc-200 px-4 py-2 rounded-md transition duration-200 ease-in-out"
-          disabled={files.length === 0 || isSummarizing}
+          disabled={files.length === 0 || isSummarizing || prompt.trim() === ""}
         >
           {isSummarizing ? "Generating Summary..." : "Generate Summary"}
         </button>

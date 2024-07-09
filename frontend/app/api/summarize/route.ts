@@ -21,6 +21,7 @@ interface FileContent {
 
 interface RequestBody {
   files: FileContent[];
+  prompt: string;
 }
 
 //TODO Add support for images which is different from Document Type
@@ -57,8 +58,7 @@ function removeFileExtension(filename: string): string {
 export async function POST(request: NextRequest) {
   const res = (await request.json()) as RequestBody;
   const files = res.files;
-  const prompt =
-    "You are a real estate analyst. Based on the provided documents on the property, what do you think about this property as an investor? Will there be tenant turnover soon, or is there risk of a large maintenance bill coming? Please synthesize the most important facts about the property for your investor.";
+  const prompt = res.prompt;
 
   const messages: Message[] = [
     {
