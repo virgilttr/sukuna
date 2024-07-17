@@ -119,7 +119,7 @@ export async function POST(request: NextRequest) {
     const command = new ConverseCommand({
       modelId: "anthropic.claude-3-haiku-20240307-v1:0",
       messages: messages,
-      inferenceConfig: { maxTokens: 4096, temperature: 0.5, topP: 0.9 },
+      inferenceConfig: { maxTokens: 4096, temperature: 0.3, topP: 0.9 },
     });
 
     const response = await bedrock.send(command);

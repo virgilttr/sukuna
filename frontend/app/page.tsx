@@ -27,7 +27,7 @@ const Home: React.FC = () => {
           </div>
           <div className="bg-zinc-900 rounded-lg p-8 shadow-lg">
             <h2 className="text-2xl font-semibold mb-6 text-zinc-100">
-              Files you would like to use
+              File Upload
             </h2>
             <FileUpload />
           </div>
