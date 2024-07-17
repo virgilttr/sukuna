@@ -8,9 +8,33 @@ const FileUpload: React.FC = () => {
   const [isSummarizing, setIsSummarizing] = useState<boolean>(false);
   const [summary, setSummary] = useState<string>("");
   const [showSummary, setShowSummary] = useState(false);
-  const [prompt, setPrompt] = useState<string>(
-    "You are a real estate analyst. Based on the provided documents on the property, what do you think about this property as an investor? Will there be tenant turnover soon, or is there risk of a large maintenance bill coming? Please synthesize the most important facts about the property for your investor."
-  );
+  const [prompt, setPrompt] =
+    useState<string>(`You are an experienced real estate analyst. Please only include information that is included in the documents. Based on the provided documents, write a detailed investment report in the following format:
+
+OVERVIEW
+Provide a concise summary (2-3 sentences) of the investment opportunity, highlighting key elements that would immediately interest an investor.
+
+RISK AND REWARDS
+Summarize the potential risks and rewards of the investment. Focus on the factors most likely to impact returns. Include a bullet-point list of top 3 risks and top 3 potential rewards.
+
+RETURNS
+Analyze the expected returns, including:
+- Expected annual return (%)
+- Cash flow projections
+- Cap rate
+- Internal Rate of Return (IRR)
+- Payback period
+- Tax advantages
+Create a table detailing this information for years 1-5, if possible.
+
+KEY ASSUMPTIONS
+List any major assumptions made in this analysis.
+
+RECOMMENDATION
+Provide a clear recommendation on the investment, taking all factors into account. Include a brief explanation of your reasoning.
+
+Please use specific data and figures from the provided documents wherever possible. If certain information is not available, please indicate this in your report.
+    `);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
