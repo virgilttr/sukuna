@@ -4,6 +4,7 @@ import {
   ConverseCommand,
   Message,
   DocumentFormat,
+  ImageFormat,
 } from "@aws-sdk/client-bedrock-runtime";
 import { NextRequest } from "next/server";
 import { fromEnv } from "@aws-sdk/credential-providers";
@@ -24,7 +25,6 @@ interface RequestBody {
   prompt: string;
 }
 
-//TODO Add support for images which is different from Document Type
 function getDocumentFormat(fileType: string): DocumentFormat {
   const extension = fileType.split("/")[1].toLowerCase();
   switch (extension) {
@@ -50,10 +50,53 @@ function getDocumentFormat(fileType: string): DocumentFormat {
   }
 }
 
+function getImageFormat(fileType: string): ImageFormat {
+  const extension = fileType.split("/")[1].toLowerCase();
+  switch (extension) {
+    case "jpeg":
+      return ImageFormat.JPEG;
+    case "png":
+      return ImageFormat.PNG;
+    case "webp":
+      return ImageFormat.WEBP;
+    case "gif":
+      return ImageFormat.GIF;
+    default:
+      return ImageFormat.JPEG;
+  }
+}
+
 // Helper function to remove file extension
 function removeFileExtension(filename: string): string {
   return filename.replace(/\.[^/.]+$/, "");
 }
+
+const imageExtensions = ["gif", "jpeg", "png", "webp"];
+
+const getFileContent = (file: FileContent) => {
+  const extension = file.name.split(".").pop()?.toLowerCase();
+
+  if (extension && imageExtensions.includes(extension)) {
+    return {
+      image: {
+        format: getImageFormat(file.type),
+        source: {
+          bytes: new Uint8Array(file.content),
+        },
+      },
+    };
+  } else {
+    return {
+      document: {
+        format: getDocumentFormat(file.type),
+        name: removeFileExtension(file.name),
+        source: {
+          bytes: new Uint8Array(file.content),
+        },
+      },
+    };
+  }
+};
 
 export async function POST(request: NextRequest) {
   const res = (await request.json()) as RequestBody;
@@ -67,15 +110,7 @@ export async function POST(request: NextRequest) {
         {
           text: prompt,
         },
-        ...files.map((file: FileContent) => ({
-          document: {
-            format: getDocumentFormat(file.type),
-            name: removeFileExtension(file.name),
-            source: {
-              bytes: new Uint8Array(file.content),
-            },
-          },
-        })),
+        ...files.map((file: FileContent) => getFileContent(file)),
       ],
     },
   ];
