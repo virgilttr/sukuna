@@ -71,7 +71,7 @@ function removeFileExtension(filename: string): string {
   return filename.replace(/\.[^/.]+$/, "");
 }
 
-const imageExtensions = ["gif", "jpeg", "png", "webp"];
+const imageExtensions = ["gif", "jpeg", "png", "webp", "jpg"];
 
 const getFileContent = (file: FileContent) => {
   const extension = file.name.split(".").pop()?.toLowerCase();

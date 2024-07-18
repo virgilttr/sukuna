@@ -58,6 +58,7 @@ Please use specific data and figures from the provided documents wherever possib
       "text/csv": "📊",
       "application/vnd.ms-excel": "📊",
       "image/jpeg": "🖼️",
+      "image/jpg": "🖼️",
       "image/png": "🖼️",
       "image/webp": "🖼️",
     };
@@ -112,7 +113,7 @@ Please use specific data and figures from the provided documents wherever possib
         multiple
         onChange={handleFileChange}
         className="hidden"
-        accept=".pdf,.txt,.xlsx,.docx,.doc,.csv,.xls,.jpeg,.png,.webp"
+        accept=".pdf,.txt,.xlsx,.docx,.doc,.csv,.xls,.jpeg,.png,.webp,.jpg"
       />
       <button
         onClick={handleButtonClick}
