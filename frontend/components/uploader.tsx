@@ -8,6 +8,7 @@ const FileUpload: React.FC = () => {
   const [isSummarizing, setIsSummarizing] = useState<boolean>(false);
   const [summary, setSummary] = useState<string>("");
   const [showSummary, setShowSummary] = useState(false);
+  const [useSonnet, setUseSonnet] = useState(false);
   const [prompt, setPrompt] =
     useState<string>(`You are an experienced real estate analyst. Please only include information that is included in the documents. Based on the provided documents, write a detailed investment report in the following format:
 
@@ -89,6 +90,7 @@ Please use specific data and figures from the provided documents wherever possib
         body: JSON.stringify({
           files: fileContents,
           prompt: prompt,
+          useSonnet: useSonnet,
         }),
       });
       if (!response.ok) {
@@ -158,6 +160,18 @@ Please use specific data and figures from the provided documents wherever possib
         className="w-full p-2 border rounded-md bg-zinc-700 text-zinc-300 placeholder-zinc-500"
         rows={5}
       />
+      <div className="flex items-center space-x-2">
+        <input
+          type="checkbox"
+          id="useSonnet"
+          checked={useSonnet}
+          onChange={(e) => setUseSonnet(e.target.checked)}
+          className="form-checkbox h-5 w-5 text-zinc-600"
+        />
+        <label htmlFor="useSonnet" className="text-zinc-300">
+          Use Claude 3 Sonnet (more powerful, but slower)
+        </label>
+      </div>
       <div className="flex space-x-2">
         <button
           onClick={requestSummary}

@@ -23,6 +23,7 @@ interface FileContent {
 interface RequestBody {
   files: FileContent[];
   prompt: string;
+  useSonnet: boolean;
 }
 
 function getDocumentFormat(fileType: string): DocumentFormat {
@@ -102,6 +103,7 @@ export async function POST(request: NextRequest) {
   const res = (await request.json()) as RequestBody;
   const files = res.files;
   const prompt = res.prompt;
+  const useSonnet = res.useSonnet;
 
   const messages: Message[] = [
     {
@@ -114,10 +116,11 @@ export async function POST(request: NextRequest) {
       ],
     },
   ];
-
+  const sonnet_3 = "anthropic.claude-3-sonnet-20240229-v1:0";
+  const haiku = "anthropic.claude-3-haiku-20240307-v1:0";
   try {
     const command = new ConverseCommand({
-      modelId: "anthropic.claude-3-haiku-20240307-v1:0",
+      modelId: useSonnet ? sonnet_3 : haiku,
       messages: messages,
       inferenceConfig: { maxTokens: 4096, temperature: 0.3, topP: 0.9 },
     });
