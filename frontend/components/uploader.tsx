@@ -163,7 +163,7 @@ Please use specific data and figures from the provided documents wherever possib
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 p-4">
       <input
         ref={fileInputRef}
         type="file"
@@ -174,7 +174,7 @@ Please use specific data and figures from the provided documents wherever possib
       />
       <button
         onClick={handleButtonClick}
-        className="w-full bg-zinc-700 hover:bg-zinc-600 text-zinc-200 px-4 py-2 rounded-md transition duration-200 ease-in-out flex items-center justify-center"
+        className="w-full bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-md transition duration-200 ease-in-out flex items-center justify-center"
         disabled={files.length >= MAX_FILES}
       >
         <svg
@@ -195,7 +195,7 @@ Please use specific data and figures from the provided documents wherever possib
       </button>
 
       {files.length > 0 && (
-        <p className="text-zinc-400 text-sm text-center">
+        <p className="text-gray-500 text-sm text-center">
           {files.length} file{files.length !== 1 ? "s" : ""} selected (
           {files.length}/{MAX_FILES})
         </p>
@@ -205,7 +205,7 @@ Please use specific data and figures from the provided documents wherever possib
         {files.map((file) => (
           <div
             key={file.name}
-            className={`text-zinc-300 text-center p-4 bg-zinc-800 rounded-md ${
+            className={`text-gray-300 text-center p-4 bg-gray-800 rounded-md ${
               oversizedFiles.has(file.name) ? "border-2 border-red-500" : ""
             }`}
           >
@@ -230,7 +230,7 @@ Please use specific data and figures from the provided documents wherever possib
         value={prompt}
         onChange={(e) => setPrompt(e.target.value)}
         placeholder="Enter your prompt here..."
-        className="w-full p-2 border rounded-md bg-zinc-700 text-zinc-300 placeholder-zinc-500"
+        className="w-full p-2 border rounded-md bg-gray-700 text-gray-300 placeholder-gray-500"
         rows={5}
       />
       <div className="flex items-center space-x-2">
@@ -239,16 +239,16 @@ Please use specific data and figures from the provided documents wherever possib
           id="useSonnet"
           checked={useSonnet}
           onChange={(e) => setUseSonnet(e.target.checked)}
-          className="form-checkbox h-5 w-5 text-zinc-600"
+          className="form-checkbox h-5 w-5 text-blue-600"
         />
-        <label htmlFor="useSonnet" className="text-zinc-300">
+        <label htmlFor="useSonnet" className="text-gray-300">
           Use Claude 3 Sonnet (more powerful, but slower)
         </label>
       </div>
       <div className="flex space-x-2">
         <button
           onClick={requestSummary}
-          className="flex-1 bg-zinc-600 hover:bg-zinc-500 text-zinc-200 px-4 py-2 rounded-md transition duration-200 ease-in-out"
+          className="flex-1 bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded-md transition duration-200 ease-in-out"
           disabled={
             files.length === 0 ||
             isSummarizing ||
@@ -272,17 +272,17 @@ Please use specific data and figures from the provided documents wherever possib
       {summary && (
         <button
           onClick={() => setShowSummary(!showSummary)}
-          className="w-full bg-zinc-600 hover:bg-zinc-500 text-zinc-200 px-4 py-2 rounded-md transition duration-200 ease-in-out"
+          className="w-full bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-md transition duration-200 ease-in-out"
         >
           {showSummary ? "Hide Summary" : "Show Summary"}
         </button>
       )}
 
       {showSummary && summary && (
-        <div className="mt-4 p-4 bg-zinc-800 rounded-md">
-          <h3 className="text-lg font-semibold mb-2 text-zinc-200">Summary</h3>
+        <div className="mt-4 p-4 bg-gray-800 rounded-md">
+          <h3 className="text-lg font-semibold mb-2 text-gray-200">Summary</h3>
           <textarea
-            className="w-full h-64 p-2 border rounded-md bg-zinc-700 text-zinc-300"
+            className="w-full h-64 p-2 border rounded-md bg-gray-700 text-gray-300"
             value={summary}
             readOnly
           />
