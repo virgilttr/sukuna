@@ -3,12 +3,17 @@ import React, { useState, useRef } from "react";
 import Link from "next/link";
 
 const FileUpload: React.FC = () => {
+  const MAX_FILES = 5;
+  const MAX_FILE_SIZE = 4.5 * 1024 * 1024; // 4.5 MB in bytes
+
   const [files, setFiles] = useState<File[]>([]);
   const [summaryUrl, setSummaryUrl] = useState<string | null>(null);
   const [isSummarizing, setIsSummarizing] = useState<boolean>(false);
   const [summary, setSummary] = useState<string>("");
   const [showSummary, setShowSummary] = useState(false);
   const [useSonnet, setUseSonnet] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [oversizedFiles, setOversizedFiles] = useState<Set<string>>(new Set());
   const [prompt, setPrompt] =
     useState<string>(`You are an experienced real estate analyst. Please only include information that is included in the documents. Based on the provided documents, write a detailed investment report in the following format:
 
@@ -40,7 +45,25 @@ Please use specific data and figures from the provided documents wherever possib
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
-      setFiles(Array.from(event.target.files));
+      const newFiles = Array.from(event.target.files);
+
+      // Check if the total number of files exceeds the limit
+      if (files.length + newFiles.length > MAX_FILES) {
+        alert(`You can only upload a maximum of ${MAX_FILES} files.`);
+        return;
+      }
+
+      // Check each file's size and update oversizedFiles
+      const newOversizedFiles = new Set(oversizedFiles);
+      newFiles.forEach((file) => {
+        if (file.size > MAX_FILE_SIZE) {
+          newOversizedFiles.add(file.name);
+        }
+      });
+
+      // Update the files state and oversizedFiles state
+      setFiles((prevFiles) => [...prevFiles, ...newFiles]);
+      setOversizedFiles(newOversizedFiles);
     }
   };
 
@@ -120,6 +143,7 @@ Please use specific data and figures from the provided documents wherever possib
       <button
         onClick={handleButtonClick}
         className="w-full bg-zinc-700 hover:bg-zinc-600 text-zinc-200 px-4 py-2 rounded-md transition duration-200 ease-in-out flex items-center justify-center"
+        disabled={files.length >= MAX_FILES}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -135,24 +159,41 @@ Please use specific data and figures from the provided documents wherever possib
             d="M12 6v6m0 0v6m0-6h6m-6 0H6"
           />
         </svg>
-        Select Files
+        {files.length >= MAX_FILES ? "File limit reached" : "Select Files"}
       </button>
+
       {files.length > 0 && (
         <p className="text-zinc-400 text-sm text-center">
-          {files.length} file{files.length !== 1 ? "s" : ""} selected
+          {files.length} file{files.length !== 1 ? "s" : ""} selected (
+          {files.length}/{MAX_FILES})
         </p>
       )}
+
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {files.map((file) => (
           <div
             key={file.name}
-            className="text-zinc-300 text-center p-4 bg-zinc-800 rounded-md"
+            className={`text-zinc-300 text-center p-4 bg-zinc-800 rounded-md ${
+              oversizedFiles.has(file.name) ? "border-2 border-red-500" : ""
+            }`}
           >
             <div className="text-4xl mb-2">{getFileIcon(file.type)}</div>
             <div className="text-sm break-words">{file.name}</div>
+            {oversizedFiles.has(file.name) && (
+              <div className="text-xs text-red-500 mt-1">
+                Exceeds 4.5 MB limit
+              </div>
+            )}
           </div>
         ))}
       </div>
+
+      {oversizedFiles.size > 0 && (
+        <p className="text-red-500 text-sm text-center">
+          Some files exceed the 4.5 MB size limit and cannot be processed.
+        </p>
+      )}
+
       <textarea
         value={prompt}
         onChange={(e) => setPrompt(e.target.value)}
@@ -176,7 +217,12 @@ Please use specific data and figures from the provided documents wherever possib
         <button
           onClick={requestSummary}
           className="flex-1 bg-zinc-600 hover:bg-zinc-500 text-zinc-200 px-4 py-2 rounded-md transition duration-200 ease-in-out"
-          disabled={files.length === 0 || isSummarizing || prompt.trim() === ""}
+          disabled={
+            files.length === 0 ||
+            isSummarizing ||
+            prompt.trim() === "" ||
+            oversizedFiles.size > 0
+          }
         >
           {isSummarizing ? "Generating Summary..." : "Generate Summary"}
         </button>
