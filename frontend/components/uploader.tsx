@@ -12,8 +12,8 @@ const FileUpload: React.FC = () => {
   const [summary, setSummary] = useState<string>("");
   const [showSummary, setShowSummary] = useState(false);
   const [useSonnet, setUseSonnet] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string>("");
   const [oversizedFiles, setOversizedFiles] = useState<Set<string>>(new Set());
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
   const [prompt, setPrompt] =
     useState<string>(`You are an experienced real estate analyst. Please only include information that is included in the documents. Based on the provided documents, write a detailed investment report in the following format:
 
@@ -87,6 +87,38 @@ Please use specific data and figures from the provided documents wherever possib
       "image/webp": "🖼️",
     };
     return iconMap[fileType] || "📁";
+  };
+
+  const downloadAsPdf = async () => {
+    try {
+      setIsGeneratingPdf(true);
+      const response = await fetch("/api/pdf", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ summary }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.style.display = "none";
+      a.href = url;
+      a.download = "investment_report.pdf";
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+      alert("Failed to generate PDF. Please try again.");
+    } finally {
+      setIsGeneratingPdf(false);
+    }
   };
 
   const requestSummary = async () => {
@@ -255,25 +287,15 @@ Please use specific data and figures from the provided documents wherever possib
             readOnly
           />
           <div className="mt-2 space-x-2">
-            <button
-              onClick={() => navigator.clipboard.writeText(summary)}
-              className="bg-zinc-600 hover:bg-zinc-500 text-zinc-200 px-3 py-1 rounded-md"
-            >
-              Copy
-            </button>
-            <button
-              onClick={() => {
-                const blob = new Blob([summary], { type: "text/plain" });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement("a");
-                a.href = url;
-                a.download = "summary.txt";
-                a.click();
-              }}
-              className="bg-zinc-600 hover:bg-zinc-500 text-zinc-200 px-3 py-1 rounded-md"
-            >
-              Save as File
-            </button>
+            {summary && (
+              <button
+                onClick={downloadAsPdf}
+                className="w-full bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-md transition duration-200 ease-in-out"
+                disabled={isGeneratingPdf}
+              >
+                {isGeneratingPdf ? "Generating PDF..." : "Download as PDF"}
+              </button>
+            )}
           </div>
         </div>
       )}
