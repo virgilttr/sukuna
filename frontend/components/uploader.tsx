@@ -120,23 +120,25 @@ RECOMMENDATION Recommend further analysis of the Coastal Keys Resort due to its 
   ) => {
     if (event.target.files) {
       const newFiles = Array.from(event.target.files);
-      const processedFiles = await Promise.all(newFiles.map(processFile));
+
       // Check if the total number of files exceeds the limit
       if (files.length + newFiles.length > MAX_FILES) {
         alert(`You can only upload a maximum of ${MAX_FILES} files.`);
         return;
       }
 
+      const processedFiles = await Promise.all(newFiles.map(processFile));
+
       // Check each file's size and update oversizedFiles
       const newOversizedFiles = new Set(oversizedFiles);
-      newFiles.forEach((file) => {
+      processedFiles.forEach((file) => {
         if (file.size > MAX_FILE_SIZE) {
           newOversizedFiles.add(file.name);
         }
       });
 
       // Append new files to existing files
-      setFiles((prevFiles) => [...prevFiles, ...newFiles]);
+      setFiles((prevFiles) => [...prevFiles, ...processedFiles]);
       setOversizedFiles(newOversizedFiles);
     }
   };
