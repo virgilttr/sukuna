@@ -13,7 +13,6 @@ const bedrock = new BedrockAgentRuntime({
 });
 
 async function callBedrockKnowledgeBase(prompt: string) {
-  const claudePrompt = `\n\nHuman: ${prompt} \n\nAssistant:`;
   const knowledgeBaseId = process.env.KNOWLEDGE_BASE_ID;
 
   const command = new RetrieveAndGenerateCommand({
