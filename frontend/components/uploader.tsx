@@ -61,10 +61,19 @@ Please use specific data and figures from the provided documents wherever possib
         }
       });
 
-      // Update the files state and oversizedFiles state
+      // Append new files to existing files
       setFiles((prevFiles) => [...prevFiles, ...newFiles]);
       setOversizedFiles(newOversizedFiles);
     }
+  };
+
+  const removeFile = (fileName: string) => {
+    setFiles((prevFiles) => prevFiles.filter((file) => file.name !== fileName));
+    setOversizedFiles((prevOversized) => {
+      const newOversized = new Set(prevOversized);
+      newOversized.delete(fileName);
+      return newOversized;
+    });
   };
 
   const handleButtonClick = () => {
@@ -170,7 +179,7 @@ Please use specific data and figures from the provided documents wherever possib
         multiple
         onChange={handleFileChange}
         className="hidden"
-        accept=".pdf,.txt,.xlsx,.docx,.doc,.csv,.xls,.jpeg,.png,.webp,.jpg"
+        accept=".pdf,.txt,.xlsx,.docx,.doc,.csv,.xls,.jpeg,.png,.webp,.jpg,.gif"
       />
       <button
         onClick={handleButtonClick}
