@@ -15,7 +15,7 @@ const FileUpload: React.FC = () => {
   const [oversizedFiles, setOversizedFiles] = useState<Set<string>>(new Set());
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
   const [prompt, setPrompt] =
-    useState<string>(`You are an experienced real estate analyst. Please only include information that is explicitly stated in the documents. All the documents refer to the same property, even if the name is not mentioned. Based on the provided documents, write a detailed investment report in the following format:
+    useState<string>(`You are an experienced real estate analyst. Please only include information that is explicitly stated in the documents. Based on the provided documents, write a detailed investment report in the following format:
 OVERVIEW
 Provide a comprehensive summary of the investment opportunity, highlighting key elements that would immediately interest an investor. The risks and rewards section should be exhaustive.
 RISK AND REWARDS
@@ -61,57 +61,70 @@ Avoid hallucinations and guesses. Only include information present in the docume
 Cite sources for each inference, either the name of the property document or general advice.
 Use your understanding of commercial real estate investment to highlight additional key insights based on the information from the reports. 
 The risks and rewards are the most important part so the bullets for this section should be extensive.
-The following is just an example format. Do not use these figures; only use it as a template. 
-OVERVIEW The Coastal Keys Resort presents a prime investment opportunity as a luxury boutique hotel in San Diego, CA, featuring 200 rooms, ocean views, a full-service spa, a gourmet restaurant, and a private beach. The property has shown consistent revenue growth and is projected to generate $12,150,000 in revenue next year with $8,000,000 in expenses.
+The following is just an example format. Do not use these figures; only use it as a template: 
+Preliminary Investment Brief
+
+OVERVIEW
+The Coastal Keys Resort presents a prime investment opportunity as a luxury boutique hotel in San Diego, CA, featuring 200 rooms, ocean views, a full-service spa, a gourmet restaurant, and a private beach. The property has shown consistent revenue growth and is projected to generate $12,150,000 in revenue next year with $8,000,000 in expenses.
+
 RISK AND REWARDS
-Risks:
-Recent hurricane damage requiring repairs within six months (Lease Agreement Addendum).
-High dependency on tourism, which can be volatile (Property Appraisal).
-Increasing operational expenses over the past three years (Historical Financials).
-Potential for increased competition from new hotels in the area (Market Analysis).
-Environmental regulations impacting coastal properties (Environmental Report).
-Rewards:
-Prime location with ocean views and luxury amenities driving high occupancy rates (Property Appraisal).
-Significant revenue growth, with projections indicating continued upward trends (Historical Financials).
-Opportunity for rent increases aligned with market trends (Market Analysis).
-Strong brand presence and reputation enhancing guest loyalty (Property Appraisal).
-Diverse revenue streams including room bookings, spa services, and dining (Income Statement).
-High guest satisfaction and positive reviews supporting future growth (Market Analysis).
-Exclusive property with no immediate competitors in the vicinity (Property Appraisal).
-Favorable economic conditions boosting tourism and travel (Market Analysis).
-PROPERTY METRICS (Pro Forma)
-Property purchase price: $50,000,000
-Future Appreciated Value: $62,000,000
-Year 1 rental income: $12,150,000
-Year 1 operating expenses: $8,000,000
-Year 1 net operating income: $4,150,000
-INVESTMENT METRICS (Pro Forma, Lease Agreement)
-Investment term: 10 years
-Property value inflation rate: 2.5%
-Rental inflation rate: 3%
-Loan term: 10 years
-Interest rate on debt: 4%
-Discount rate: 6%
-RETURN METRICS (Pro Forma)
-Discounted Cash Flow: $8,000,000
-Equity Multiple (MOIC): 2.5x
-Average Cap-Rate: 6.5%
-Internal Rate of Return: 12%
-Average Cash on Cash: 10%
+
+- Risks:
+  - Recent hurricane damage requiring repairs within six months (Source: Lease Agreement Addendum).
+  - High dependency on tourism, which can be volatile (Source: Property Appraisal).
+  - Increasing operational expenses over the past three years (Source: Historical Financials).
+  - Potential for increased competition from new hotels in the area (Source: Market Analysis).
+  - Environmental regulations impacting coastal properties (Source: Environmental Report).
+
+- Rewards:
+  - Prime location with ocean views and luxury amenities driving high occupancy rates (Source: Property Appraisal).
+  - Significant revenue growth, with projections indicating continued upward trends (Source: Historical Financials).
+  - Opportunity for rent increases aligned with market trends (Source: Market Analysis).
+  - Strong brand presence and reputation enhancing guest loyalty (Source: Property Appraisal).
+  - Diverse revenue streams including room bookings, spa services, and dining (Source: Income Statement).
+  - High guest satisfaction and positive reviews supporting future growth (Source: Market Analysis).
+  - Exclusive property with no immediate competitors in the vicinity (Source: Property Appraisal).
+  - Favorable economic conditions boosting tourism and travel (Source: Market Analysis).
+
+PROPERTY METRICS
+- Property Purchase Price: $50,000,000
+- Future Appreciated Value: $62,000,000
+- Year 1 Rental Income: $12,150,000
+- Year 1 Operating Expenses: $8,000,000
+- Year 1 Net Operating Income: $4,150,000
+
+INVESTMENT METRICS
+- Investment term: 10 years
+- Property value inflation rate: 2.5%
+- Rental inflation rate: 3%
+- Loan term: 10 years
+- Interest rate on debt: 4%
+- Discount rate: 6%
+
+RETURN METRICS
+- Discounted Cash Flow: $8,000,000
+- Equity Multiple (MOIC): 2.5x
+- Average Cap-Rate: 6.5%
+- Internal Rate of Return: 12%
+- Average Cash on Cash: 10%
+
 Projected Investment Cash Flows:
-Year 1: ($54,150,000)
-Year 2: $4,274,500
-Year 3: $4,402,735
-Year 4: $4,534,817
-Year 5: $4,670,862
-Year 6-10: Not available
+- Year 1: ($54,150,000)
+- Year 2: $4,274,500
+- Year 3: $4,402,735
+- Year 4: $4,534,817
+- Year 5: $4,670,862
+- Year 6-10: Not available
+
 KEY ASSUMPTIONS
-The property will undergo repairs for hurricane damage within six months.
-Continued growth in the tourism sector will sustain high occupancy rates.
-Operational expenses will stabilize following recent increases.
-No significant changes in local environmental regulations.
-Competitor hotels will not significantly impact occupancy rates.
-RECOMMENDATION Recommend further analysis of the Coastal Keys Resort due to its strong revenue projections and prime location. A detailed examination of the repair costs and timelines for hurricane damage is essential before proceeding with the full underwriting process.`);
+- The property will undergo repairs for hurricane damage within six months.
+- Continued growth in the tourism sector will sustain high occupancy rates.
+- Operational expenses will stabilize following recent increases.
+- No significant changes in local environmental regulations.
+- Competitor hotels will not significantly impact occupancy rates.
+
+RECOMMENDATION
+Score: 4 - Recommend further analysis of the Coastal Keys Resort. The property shows strong revenue projections and is located in a prime area with high demand. However, the recent hurricane damage and the need for repairs pose a significant risk that must be thoroughly evaluated. The potential for increased competition and environmental regulations also warrants further investigation. Given these factors, a detailed examination of the repair costs and timelines for hurricane damage is essential before proceeding with the full underwriting process. The overall strong performance metrics and favorable location suggest that with proper due diligence, this property could be a valuable investment.`);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
