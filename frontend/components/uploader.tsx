@@ -15,7 +15,7 @@ const FileUpload: React.FC = () => {
   const [oversizedFiles, setOversizedFiles] = useState<Set<string>>(new Set());
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
   const [prompt, setPrompt] =
-    useState<string>(`You are an experienced real estate analyst. Please only include information that is explicitly stated in the documents. Based on the provided documents, write a detailed investment report in the following format:
+    useState<string>(`You are an experienced real estate analyst. Please only include information that is explicitly stated in the documents. All the documents refer to the same property, even if the name is not mentioned. Based on the provided documents, write a detailed investment report in the following format:
 OVERVIEW
 Provide a comprehensive summary of the investment opportunity, highlighting key elements that would immediately interest an investor. The risks and rewards section should be exhaustive.
 RISK AND REWARDS
