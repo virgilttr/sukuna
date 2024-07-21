@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useRef } from "react";
 import Link from "next/link";
-import imageCompression from "browser-image-compression";
 
 const FileUpload: React.FC = () => {
   const MAX_FILES = 5;
@@ -115,9 +114,7 @@ Competitor hotels will not significantly impact occupancy rates.
 RECOMMENDATION Recommend further analysis of the Coastal Keys Resort due to its strong revenue projections and prime location. A detailed examination of the repair costs and timelines for hurricane damage is essential before proceeding with the full underwriting process.`);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileChange = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       const newFiles = Array.from(event.target.files);
 
@@ -127,11 +124,9 @@ RECOMMENDATION Recommend further analysis of the Coastal Keys Resort due to its 
         return;
       }
 
-      const processedFiles = await Promise.all(newFiles.map(processFile));
-
       // Check each file's size and update oversizedFiles
       const newOversizedFiles = new Set(oversizedFiles);
-      processedFiles.forEach((file) => {
+      newFiles.forEach((file) => {
         console.log(`Processed ${file.name}: ${file.size} bytes`);
         if (file.size > MAX_FILE_SIZE) {
           newOversizedFiles.add(file.name);
@@ -139,41 +134,9 @@ RECOMMENDATION Recommend further analysis of the Coastal Keys Resort due to its 
       });
 
       // Append new files to existing files
-      setFiles((prevFiles) => [...prevFiles, ...processedFiles]);
+      setFiles((prevFiles) => [...prevFiles, ...newFiles]);
       setOversizedFiles(newOversizedFiles);
     }
-  };
-
-  const processFile = async (file: File): Promise<File> => {
-    if (file.type.startsWith("image/")) {
-      console.log(`Compressing ${file.name}: ${file.size} bytes`);
-      return await compressImage(file);
-    }
-    return file;
-  };
-
-  const compressImage = async (file: File): Promise<File> => {
-    const options = {
-      maxSizeMB: 0.5,
-      maxWidthOrHeight: 1024,
-      useWebWorker: true,
-    };
-
-    try {
-      return await imageCompression(file, options);
-    } catch (error) {
-      console.error("Error compressing image:", error);
-      return file; // Fallback to original file if compression fails
-    }
-  };
-
-  const removeFile = (fileName: string) => {
-    setFiles((prevFiles) => prevFiles.filter((file) => file.name !== fileName));
-    setOversizedFiles((prevOversized) => {
-      const newOversized = new Set(prevOversized);
-      newOversized.delete(fileName);
-      return newOversized;
-    });
   };
 
   const handleButtonClick = () => {
