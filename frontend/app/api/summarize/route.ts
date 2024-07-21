@@ -1,3 +1,5 @@
+import "server-only";
+export const runtime = "experimental-edge";
 export const maxDuration = 60;
 import {
   BedrockRuntimeClient,

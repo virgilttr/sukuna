@@ -1,3 +1,6 @@
+import "server-only";
+export const runtime = "experimental-edge";
+
 import { NextRequest, NextResponse } from "next/server";
 import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
 import fs from "fs/promises";

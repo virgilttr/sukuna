@@ -1,5 +1,5 @@
 import "server-only";
-
+export const runtime = "experimental-edge";
 import {
   BedrockAgentRuntime,
   RetrieveAndGenerateCommand,
