@@ -15,32 +15,103 @@ const FileUpload: React.FC = () => {
   const [oversizedFiles, setOversizedFiles] = useState<Set<string>>(new Set());
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
   const [prompt, setPrompt] =
-    useState<string>(`You are an experienced real estate analyst. Please only include information that is included in the documents. Based on the provided documents, write a detailed investment report in the following format:
-
+    useState<string>(`You are an experienced real estate analyst. Please only include information that is explicitly stated in the documents. Based on the provided documents, write a detailed investment report in the following format:
 OVERVIEW
-Provide a concise summary (2-3 sentences) of the investment opportunity, highlighting key elements that would immediately interest an investor.
-
+Provide a comprehensive summary of the investment opportunity, highlighting key elements that would immediately interest an investor. The risks and rewards section should be exhaustive.
 RISK AND REWARDS
-Summarize the potential risks and rewards of the investment. Focus on the factors most likely to impact returns. Include a bullet-point list of top 3 risks and top 3 potential rewards.
-
-RETURNS
-Analyze the expected returns, including:
-- Expected annual return (%)
-- Cash flow projections
-- Cap rate
-- Internal Rate of Return (IRR)
-- Payback period
-- Tax advantages
-Create a table detailing this information for years 1-5, if possible.
-
+Summarize the potential risks and rewards of the investment, focusing on the factors most likely to impact returns. Include specific data points and observations from the documents. Do not generalize. Ensure that each point is directly tied to information in the documents, but it is ok to make inference based on your understanding of commercial real estate investment.
+Create a detailed list of projected investment cash flows for the entire investment term, not a table. Indicate if certain information is not available.
+PROPERTY METRICS
+Extract the following property metrics, if available, otherwise indicate “Not available”:
+Property purchase price
+Future Appreciated Value
+Year 1 operating income
+Year 1 operating expenses
+Year 1 net operating income
+INVESTMENT METRICS
+Extract the following investment metrics, if available, otherwise indicate “Not available”:
+Investment term
+Loan term
+Property value inflation rate
+Rental inflation rate
+Interest rate on debt
+Discount rate
+RETURN METRICS
+Extract the following return metrics, if available, otherwise indicate “Not available”:
+Discounted Cash Flow
+Equity Multiple (MOIC)
+Average Cap-Rate
+Internal Rate of Return
+Average Cash on Cash
 KEY ASSUMPTIONS
 List any major assumptions made in this analysis.
-
 RECOMMENDATION
-Provide a clear recommendation on the investment, taking all factors into account. Include a brief explanation of your reasoning.
-
-Please use specific data and figures from the provided documents wherever possible. If certain information is not available, please indicate this in your report.
-    `);
+Provide a (1-5) score on the property based on the following scale:
+5: if rewards strongly outweigh risks
+4: if risks seem to outweigh risks
+3: if rewards and risks seem to be equal
+2: if risks seem to outweigh rewards
+1: if risks strongly outweigh rewards
+Do not recommend to invest or not invest. Instead, suggest a priority score (1-5) on further analyzing the property or continuing with the underwriting process based on the provided documents.  
+ADDITIONAL GUIDELINES
+Use specific data and figures from the provided documents wherever possible. If certain information is not available, please indicate this in your report.
+Ensure the descriptions are specific and reference actual data from the documents. Avoid broad or vague statements.
+Use the knowledge base for general inferences but avoid making major assumptions. If the information is not available, state "Not available."
+Avoid hallucinations and guesses. Only include information present in the documents.
+Cite sources for each inference, either the name of the property document or general advice.
+Use your understanding of commercial real estate investment to highlight additional key insights based on the information from the reports. 
+The risks and rewards are the most important part so the bullets for this section should be extensive.
+The following is just an example format. Do not use these figures; only use it as a template. 
+OVERVIEW The Coastal Keys Resort presents a prime investment opportunity as a luxury boutique hotel in San Diego, CA, featuring 200 rooms, ocean views, a full-service spa, a gourmet restaurant, and a private beach. The property has shown consistent revenue growth and is projected to generate $12,150,000 in revenue next year with $8,000,000 in expenses.
+RISK AND REWARDS
+Risks:
+Recent hurricane damage requiring repairs within six months (Lease Agreement Addendum).
+High dependency on tourism, which can be volatile (Property Appraisal).
+Increasing operational expenses over the past three years (Historical Financials).
+Potential for increased competition from new hotels in the area (Market Analysis).
+Environmental regulations impacting coastal properties (Environmental Report).
+Rewards:
+Prime location with ocean views and luxury amenities driving high occupancy rates (Property Appraisal).
+Significant revenue growth, with projections indicating continued upward trends (Historical Financials).
+Opportunity for rent increases aligned with market trends (Market Analysis).
+Strong brand presence and reputation enhancing guest loyalty (Property Appraisal).
+Diverse revenue streams including room bookings, spa services, and dining (Income Statement).
+High guest satisfaction and positive reviews supporting future growth (Market Analysis).
+Exclusive property with no immediate competitors in the vicinity (Property Appraisal).
+Favorable economic conditions boosting tourism and travel (Market Analysis).
+PROPERTY METRICS (Pro Forma)
+Property purchase price: $50,000,000
+Future Appreciated Value: $62,000,000
+Year 1 rental income: $12,150,000
+Year 1 operating expenses: $8,000,000
+Year 1 net operating income: $4,150,000
+INVESTMENT METRICS (Pro Forma, Lease Agreement)
+Investment term: 10 years
+Property value inflation rate: 2.5%
+Rental inflation rate: 3%
+Loan term: 10 years
+Interest rate on debt: 4%
+Discount rate: 6%
+RETURN METRICS (Pro Forma)
+Discounted Cash Flow: $8,000,000
+Equity Multiple (MOIC): 2.5x
+Average Cap-Rate: 6.5%
+Internal Rate of Return: 12%
+Average Cash on Cash: 10%
+Projected Investment Cash Flows:
+Year 1: ($54,150,000)
+Year 2: $4,274,500
+Year 3: $4,402,735
+Year 4: $4,534,817
+Year 5: $4,670,862
+Year 6-10: Not available
+KEY ASSUMPTIONS
+The property will undergo repairs for hurricane damage within six months.
+Continued growth in the tourism sector will sustain high occupancy rates.
+Operational expenses will stabilize following recent increases.
+No significant changes in local environmental regulations.
+Competitor hotels will not significantly impact occupancy rates.
+RECOMMENDATION Recommend further analysis of the Coastal Keys Resort due to its strong revenue projections and prime location. A detailed examination of the repair costs and timelines for hurricane damage is essential before proceeding with the full underwriting process.`);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
