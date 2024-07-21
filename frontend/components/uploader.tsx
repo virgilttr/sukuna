@@ -132,6 +132,7 @@ RECOMMENDATION Recommend further analysis of the Coastal Keys Resort due to its 
       // Check each file's size and update oversizedFiles
       const newOversizedFiles = new Set(oversizedFiles);
       processedFiles.forEach((file) => {
+        console.log(`Processed ${file.name}: ${file.size} bytes`);
         if (file.size > MAX_FILE_SIZE) {
           newOversizedFiles.add(file.name);
         }
@@ -145,6 +146,7 @@ RECOMMENDATION Recommend further analysis of the Coastal Keys Resort due to its 
 
   const processFile = async (file: File): Promise<File> => {
     if (file.type.startsWith("image/")) {
+      console.log(`Compressing ${file.name}: ${file.size} bytes`);
       return await compressImage(file);
     }
     return file;
@@ -152,7 +154,7 @@ RECOMMENDATION Recommend further analysis of the Coastal Keys Resort due to its 
 
   const compressImage = async (file: File): Promise<File> => {
     const options = {
-      maxSizeMB: 1,
+      maxSizeMB: 0.5,
       maxWidthOrHeight: 1024,
       useWebWorker: true,
     };
