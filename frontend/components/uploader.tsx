@@ -14,13 +14,12 @@ const FileUpload: React.FC = () => {
   const [useSonnet, setUseSonnet] = useState(false);
   const [oversizedFiles, setOversizedFiles] = useState<Set<string>>(new Set());
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
-  const [prompt, setPrompt] =
-    useState<string>(`You are an experienced real estate analyst. Please only include information that is explicitly stated in the documents. Based on the provided documents, write a detailed investment report in the following format:
-OVERVIEW
+  const [prompt, setPrompt] = useState<string>(`OVERVIEW
 Provide a comprehensive summary of the investment opportunity, highlighting key elements that would immediately interest an investor. The risks and rewards section should be exhaustive.
 RISK AND REWARDS
 Summarize the potential risks and rewards of the investment, focusing on the factors most likely to impact returns. Include specific data points and observations from the documents. Do not generalize. Ensure that each point is directly tied to information in the documents, but it is ok to make inference based on your understanding of commercial real estate investment.
-Create a detailed list of projected investment cash flows for the entire investment term, not a table. Indicate if certain information is not available.
+INVESTMENT CASH FLOW ANALYSIS
+Create a detailed list of projected net investment cash flows (operating and finance) for the entire investment term, not a table. Indicate if certain information is not available. Ensure that the sum of these cash flows represents the total net cash flows for the investor over the investment period. Indicate if certain information is not available.
 PROPERTY METRICS
 Extract the following property metrics, if available, otherwise indicate “Not available”:
 Property purchase price
@@ -108,7 +107,7 @@ RETURN METRICS
 - Internal Rate of Return: 12%
 - Average Cash on Cash: 10%
 
-Projected Investment Cash Flows:
+INVESTMENT CASH FLOWS:
 - Year 1: ($54,150,000)
 - Year 2: $4,274,500
 - Year 3: $4,402,735
