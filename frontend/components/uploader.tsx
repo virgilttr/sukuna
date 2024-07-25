@@ -360,8 +360,16 @@ Score: 4 - Recommend further analysis of the Coastal Keys Resort. The property s
             {summary && (
               <button
                 onClick={downloadAsPdf}
-                className="w-full bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-md transition duration-200 ease-in-out"
-                disabled={isGeneratingPdf}
+                className={`w-full ${
+                  summary && summary !== "Generating summary..."
+                    ? "bg-blue-600 hover:bg-blue-500"
+                    : "bg-gray-400 cursor-not-allowed"
+                } text-white px-4 py-2 rounded-md transition duration-200 ease-in-out`}
+                disabled={
+                  !summary ||
+                  summary === "Generating summary..." ||
+                  isGeneratingPdf
+                }
               >
                 {isGeneratingPdf ? "Generating PDF..." : "Download as PDF"}
               </button>
