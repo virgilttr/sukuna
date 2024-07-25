@@ -11,7 +11,7 @@ const FileUpload: React.FC = () => {
   const [isSummarizing, setIsSummarizing] = useState<boolean>(false);
   const [summary, setSummary] = useState<string>("");
   const [showSummary, setShowSummary] = useState(false);
-  const [useSonnet, setUseSonnet] = useState(false);
+  const [useSonnet, setUseSonnet] = useState(true);
   const [oversizedFiles, setOversizedFiles] = useState<Set<string>>(new Set());
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
   const [prompt, setPrompt] =
@@ -315,26 +315,6 @@ Score: 4 - Recommend further analysis of the Coastal Keys Resort. The property s
           Some files exceed the 4.5 MB size limit and cannot be processed.
         </p>
       )}
-
-      <textarea
-        value={prompt}
-        onChange={(e) => setPrompt(e.target.value)}
-        placeholder="Enter your prompt here..."
-        className="w-full p-2 border rounded-md bg-gray-700 text-gray-300 placeholder-gray-500"
-        rows={5}
-      />
-      <div className="flex items-center space-x-2">
-        <input
-          type="checkbox"
-          id="useSonnet"
-          checked={useSonnet}
-          onChange={(e) => setUseSonnet(e.target.checked)}
-          className="form-checkbox h-5 w-5 text-blue-600"
-        />
-        <label htmlFor="useSonnet" className="text-gray-300">
-          Use Claude 3 Sonnet (more powerful, but slower)
-        </label>
-      </div>
       <div className="flex space-x-2">
         <button
           onClick={requestSummary}
