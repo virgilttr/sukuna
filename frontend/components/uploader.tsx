@@ -14,7 +14,10 @@ const FileUpload: React.FC = () => {
   const [useSonnet, setUseSonnet] = useState(false);
   const [oversizedFiles, setOversizedFiles] = useState<Set<string>>(new Set());
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
-  const [prompt, setPrompt] = useState<string>(`OVERVIEW
+  const [prompt, setPrompt] =
+    useState<string>(`You are an experienced real estate analyst. Please only include information that is explicitly stated in the documents. Based on the provided documents, write a detailed investment report in the following format:
+Score # - Provide short sentence on recommendation.
+OVERVIEW
 Provide a comprehensive summary of the investment opportunity, highlighting key elements that would immediately interest an investor. The risks and rewards section should be exhaustive.
 RISK AND REWARDS
 Summarize the potential risks and rewards of the investment, focusing on the factors most likely to impact returns. Include specific data points and observations from the documents. Do not generalize. Ensure that each point is directly tied to information in the documents, but it is ok to make inference based on your understanding of commercial real estate investment.
@@ -61,7 +64,10 @@ Cite sources for each inference, either the name of the property document or gen
 Use your understanding of commercial real estate investment to highlight additional key insights based on the information from the reports. 
 The risks and rewards are the most important part so the bullets for this section should be extensive.
 The following is just an example format. Do not use these figures; only use it as a template: 
+
 Preliminary Investment Brief
+
+Score: 4 - Recommend further analysis of the Coastal Keys Resort.
 
 OVERVIEW
 The Coastal Keys Resort presents a prime investment opportunity as a luxury boutique hotel in San Diego, CA, featuring 200 rooms, ocean views, a full-service spa, a gourmet restaurant, and a private beach. The property has shown consistent revenue growth and is projected to generate $12,150,000 in revenue next year with $8,000,000 in expenses.
