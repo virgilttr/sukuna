@@ -326,7 +326,7 @@ Score: 4 - Recommend further analysis of the Coastal Keys Resort. The property s
             oversizedFiles.size > 0
           }
         >
-          {isSummarizing ? "Generating Summary..." : "Hit to Generate Summary"}
+          {isSummarizing ? "Generating Summary..." : "Generate Summary"}
         </button>
       </div>
 
