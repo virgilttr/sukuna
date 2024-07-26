@@ -20,9 +20,11 @@ const Home: React.FC = () => {
             <ol className="list-decimal list-inside space-y-4 text-lg">
               <li>
                 Select the files you would like to use for your report below
-                (word, PDF, excel, pictures).
+                (word, PDF, excel).
               </li>
-              <li>Ask your AI assistant questions about your documents.</li>
+              <li>
+                Generate your property report based on the provided documents.
+              </li>
             </ol>
           </div>
           <div className="bg-zinc-900 rounded-lg p-8 shadow-lg">
