@@ -14,6 +14,7 @@ const FileUpload: React.FC = () => {
   const [useSonnet, setUseSonnet] = useState(true);
   const [oversizedFiles, setOversizedFiles] = useState<Set<string>>(new Set());
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
+  const [invalidFiles, setInvalidFiles] = useState<Set<string>>(new Set());
   const [prompt, setPrompt] =
     useState<string>(`You are an experienced real estate analyst. Please only include information that is explicitly stated in the documents. Based on the provided documents, write a detailed investment report in the following format:
 Score # - Provide short sentence on recommendation.
@@ -142,18 +143,23 @@ Score: 4 - Recommend further analysis of the Coastal Keys Resort. The property s
         return;
       }
 
-      // Check each file's size and update oversizedFiles
+      // Check each file's size and name validity
       const newOversizedFiles = new Set(oversizedFiles);
+      const newInvalidFiles = new Set(invalidFiles);
       newFiles.forEach((file) => {
         console.log(`Processed ${file.name}: ${file.size} bytes`);
         if (file.size > MAX_FILE_SIZE) {
           newOversizedFiles.add(file.name);
         }
+        if (!isValidFileName(file.name)) {
+          newInvalidFiles.add(file.name);
+        }
       });
 
-      // Append new files to existing files
+      // Append all new files to existing files
       setFiles((prevFiles) => [...prevFiles, ...newFiles]);
       setOversizedFiles(newOversizedFiles);
+      setInvalidFiles(newInvalidFiles);
     }
   };
 
@@ -177,6 +183,16 @@ Score: 4 - Recommend further analysis of the Coastal Keys Resort. The property s
       "image/webp": "🖼️",
     };
     return iconMap[fileType] || "📁";
+  };
+
+  const isValidFileName = (fileName: string): boolean => {
+    // TODO: Check if the file name contains only allowed characters TODO
+    // const validCharacters = /^[a-zA-Z0-9\s\-\(\)\[\]]+$/;
+
+    // Check if the file name doesn't contain consecutive whitespace characters
+    const noConsecutiveWhitespace = /\S+(\s\S+)*$/;
+
+    return noConsecutiveWhitespace.test(fileName);
   };
 
   const downloadAsPdf = async () => {
@@ -283,33 +299,51 @@ Score: 4 - Recommend further analysis of the Coastal Keys Resort. The property s
         </svg>
         {files.length >= MAX_FILES ? "File limit reached" : "Select Files"}
       </button>
-
       {files.length > 0 && (
         <p className="text-gray-500 text-sm text-center">
           {files.length} file{files.length !== 1 ? "s" : ""} selected (
           {files.length}/{MAX_FILES})
         </p>
       )}
-
+      {oversizedFiles.size > 0 && (
+        <p className="text-red-500 text-sm text-center">
+          Files exceeding 4.5 MB cannot be processed.
+        </p>
+      )}
+      {invalidFiles.size > 0 && (
+        <div className="text-red-500 text-sm text-center">
+          <p>Some files have invalid names and cannot be processed.</p>
+          <p>
+            File names can only contain alphanumeric characters, single spaces,
+            hyphens, parentheses, and square brackets.
+          </p>
+        </div>
+      )}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {files.map((file) => (
           <div
             key={file.name}
             className={`text-gray-300 text-center p-4 bg-gray-800 rounded-md ${
-              oversizedFiles.has(file.name) ? "border-2 border-red-500" : ""
+              oversizedFiles.has(file.name) || invalidFiles.has(file.name)
+                ? "border-2 border-red-500"
+                : ""
             }`}
           >
             <div className="text-4xl mb-2">{getFileIcon(file.type)}</div>
-            <div className="text-sm break-words">{file.name}</div>
+            <div className="text-sm overflow-hidden text-ellipsis whitespace-nowrap">
+              {file.name}
+            </div>
             {oversizedFiles.has(file.name) && (
               <div className="text-xs text-red-500 mt-1">
                 Exceeds 4.5 MB limit
               </div>
             )}
+            {invalidFiles.has(file.name) && (
+              <div className="text-xs text-red-500 mt-1">Invalid file name</div>
+            )}
           </div>
         ))}
-      </div>
-
+      </div>{" "}
       {oversizedFiles.size > 0 && (
         <p className="text-red-500 text-sm text-center">
           Some files exceed the 4.5 MB size limit and cannot be processed.
@@ -323,13 +357,13 @@ Score: 4 - Recommend further analysis of the Coastal Keys Resort. The property s
             files.length === 0 ||
             isSummarizing ||
             prompt.trim() === "" ||
-            oversizedFiles.size > 0
+            oversizedFiles.size > 0 ||
+            invalidFiles.size > 0
           }
         >
           {isSummarizing ? "Generating Summary..." : "Generate Summary"}
-        </button>
+        </button>{" "}
       </div>
-
       {summaryUrl && (
         <Link
           href={summaryUrl}
@@ -338,7 +372,6 @@ Score: 4 - Recommend further analysis of the Coastal Keys Resort. The property s
           Download Summary
         </Link>
       )}
-
       {summary && (
         <button
           onClick={() => setShowSummary(!showSummary)}
@@ -347,7 +380,6 @@ Score: 4 - Recommend further analysis of the Coastal Keys Resort. The property s
           {showSummary ? "Hide Summary" : "Show Summary"}
         </button>
       )}
-
       {showSummary && summary && (
         <div className="mt-4 p-4 bg-gray-800 rounded-md">
           <h3 className="text-lg font-semibold mb-2 text-gray-200">Summary</h3>
