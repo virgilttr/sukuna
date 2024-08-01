@@ -11,7 +11,7 @@ const FileUpload: React.FC = () => {
   const [isSummarizing, setIsSummarizing] = useState<boolean>(false);
   const [summary, setSummary] = useState<string>("");
   const [showSummary, setShowSummary] = useState(false);
-  const [useSonnet, setUseSonnet] = useState(false);
+  const [useSonnet, setUseSonnet] = useState(true);
   const [oversizedFiles, setOversizedFiles] = useState<Set<string>>(new Set());
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
   const [invalidFiles, setInvalidFiles] = useState<Set<string>>(new Set());
