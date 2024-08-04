@@ -133,6 +133,19 @@ RECOMMENDATION
 Score: 4 - Recommend further analysis of the Coastal Keys Resort. The property shows strong revenue projections and is located in a prime area with high demand. However, the recent hurricane damage and the need for repairs pose a significant risk that must be thoroughly evaluated. The potential for increased competition and environmental regulations also warrants further investigation. Given these factors, a detailed examination of the repair costs and timelines for hurricane damage is essential before proceeding with the full underwriting process. The overall strong performance metrics and favorable location suggest that with proper due diligence, this property could be a valuable investment.`);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const handleReset = () => {
+    setFiles([]);
+    setSummaryUrl(null);
+    setIsSummarizing(false);
+    setSummary("");
+    setShowSummary(false);
+    setOversizedFiles(new Set());
+    setInvalidFiles(new Set());
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       const newFiles = Array.from(event.target.files);
@@ -299,6 +312,27 @@ Score: 4 - Recommend further analysis of the Coastal Keys Resort. The property s
         </svg>
         {files.length >= MAX_FILES ? "File limit reached" : "Select Files"}
       </button>
+      <button
+        onClick={handleReset}
+        className="w-full bg-red-600 hover:bg-red-500 text-white px-4 py-2 rounded-md transition duration-200 ease-in-out flex items-center justify-center"
+        disabled={files.length === 0 && !summary}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-5 w-5 mr-2"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+          />
+        </svg>
+        Reset
+      </button>{" "}
       {files.length > 0 && (
         <p className="text-gray-500 text-sm text-center">
           {files.length} file{files.length !== 1 ? "s" : ""} selected (

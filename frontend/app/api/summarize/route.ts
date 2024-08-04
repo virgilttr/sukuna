@@ -1,3 +1,5 @@
+import "server-only";
+export const runtime = "experimental-edge";
 export const maxDuration = 60;
 import {
   BedrockRuntimeClient,
@@ -126,7 +128,7 @@ export async function POST(request: NextRequest) {
     });
 
     const response = await bedrock.send(command);
-    console.log(response);
+    console.log(response.usage);
 
     const content = response.output?.message?.content;
 
