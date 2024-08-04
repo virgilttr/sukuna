@@ -119,6 +119,7 @@ export async function POST(request: NextRequest) {
   ];
   const sonnet_3 = "anthropic.claude-3-sonnet-20240229-v1:0";
   const haiku = "anthropic.claude-3-haiku-20240307-v1:0";
+  console.log("File names:", files.map((file) => file.name).join(", "));
   try {
     const command = new ConverseCommand({
       modelId: useSonnet ? sonnet_3 : haiku,
@@ -140,7 +141,7 @@ export async function POST(request: NextRequest) {
     ) {
       responseText = content[0].text;
     }
-
+    console.log("Request completed sucesfully");
     return new Response(
       JSON.stringify({
         summary: responseText,
