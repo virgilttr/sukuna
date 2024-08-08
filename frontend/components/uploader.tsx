@@ -383,6 +383,13 @@ Score: 4 - Recommend further analysis of the Coastal Keys Resort. The property s
           Some files exceed the 4.5 MB size limit and cannot be processed.
         </p>
       )}
+      <textarea
+        value={prompt}
+        onChange={(e) => setPrompt(e.target.value)}
+        placeholder="Enter your prompt here..."
+        className="w-full p-2 border rounded-md bg-gray-700 text-gray-300 placeholder-gray-500"
+        rows={5}
+      />
       <div className="flex space-x-2">
         <button
           onClick={requestSummary}
