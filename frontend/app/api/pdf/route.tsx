@@ -123,7 +123,7 @@ export async function POST(req: NextRequest) {
   };
 
   // Add centered title
-  const title = "Investment Report";
+  const title = "Underwriting Report";
   const titleWidth = boldFont.widthOfTextAtSize(title, 24);
   page.drawText(title, {
     x: (pageWidth - titleWidth) / 2,
