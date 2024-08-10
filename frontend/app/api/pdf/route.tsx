@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
   const margin = 50;
   const fontSize = 12;
   const headingSize = 16;
-  const lineHeight = 16;
+  const lineHeight = 1.5 * fontSize;
   const paragraphSpacing = 10;
 
   const addPage = async () => {
@@ -51,7 +51,8 @@ export async function POST(req: NextRequest) {
       size = fontSize,
       font = regularFont,
       indent = 0,
-    }: { size?: number; font?: PDFFont; indent?: number }
+      addSpacing = true,
+    }: { size?: number; font?: PDFFont; indent?: number; addSpacing?: boolean }
   ) => {
     const textWidth = pageWidth - 2 * margin - indent;
     const lines = text.split("\n");
@@ -119,7 +120,9 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    y -= paragraphSpacing;
+    if (addSpacing) {
+      y -= paragraphSpacing;
+    }
   };
 
   // Add centered title
@@ -146,11 +149,12 @@ export async function POST(req: NextRequest) {
       if (paragraph.trim().startsWith("-")) {
         // Bullet points
         for (const point of paragraph.split("\n")) {
-          await drawText(point.trim(), { indent: 20 });
+          await drawText(point.trim(), { indent: 20, addSpacing: false });
         }
+        y -= paragraphSpacing;
       } else {
         // Regular paragraph
-        await drawText(paragraph, { indent: 0 });
+        await drawText(paragraph, { indent: 0, addSpacing: true });
       }
     }
   }
