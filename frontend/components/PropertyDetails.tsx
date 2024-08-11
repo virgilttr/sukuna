@@ -20,6 +20,42 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ extractedInfo }) => {
     alert("Zoning verification letter generated!");
   };
 
+  // Dummy inspection report data
+  const inspectionReport = {
+    date: "June 15, 2024",
+    inspector: "John Doe",
+    overallCondition: "Good",
+    items: [
+      {
+        name: "Foundation",
+        condition: "Excellent",
+        notes: "No signs of settling or cracking",
+      },
+      {
+        name: "Roof",
+        condition: "Good",
+        notes: "Minor wear, estimated 5-7 years of life remaining",
+      },
+      {
+        name: "Electrical Systems",
+        condition: "Good",
+        notes: "Up to code, no major issues detected",
+      },
+      {
+        name: "Plumbing",
+        condition: "Fair",
+        notes: "Some pipes showing age, may need replacement in 3-5 years",
+      },
+      {
+        name: "HVAC",
+        condition: "Excellent",
+        notes: "Recently replaced, energy-efficient systems",
+      },
+    ],
+    recommendations:
+      "Schedule regular maintenance for plumbing systems. Consider budgeting for future roof replacement.",
+  };
+
   return (
     <div className="p-4 bg-gray-800 rounded-md">
       <h2 className="text-2xl font-bold mb-4 text-gray-200">
@@ -74,6 +110,53 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ extractedInfo }) => {
               </tr>
             </tbody>
           </table>
+        </div>
+      </div>
+
+      {/* Inspection Report */}
+      <div className="mb-6">
+        <h3 className="text-lg font-semibold mb-2 text-gray-300">
+          Inspection Report
+        </h3>
+        <div className="bg-gray-700 rounded-md p-4">
+          <p className="text-gray-300">
+            <span className="font-semibold">Date:</span> {inspectionReport.date}
+          </p>
+          <p className="text-gray-300">
+            <span className="font-semibold">Inspector:</span>{" "}
+            {inspectionReport.inspector}
+          </p>
+          <p className="text-gray-300">
+            <span className="font-semibold">Overall Condition:</span>{" "}
+            {inspectionReport.overallCondition}
+          </p>
+
+          <h4 className="text-md font-semibold mt-4 mb-2 text-gray-300">
+            Inspection Items
+          </h4>
+          <table className="w-full text-gray-300">
+            <thead>
+              <tr>
+                <th className="text-left">Item</th>
+                <th className="text-left">Condition</th>
+                <th className="text-left">Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              {inspectionReport.items.map((item, index) => (
+                <tr key={index}>
+                  <td className="pr-4">{item.name}</td>
+                  <td className="pr-4">{item.condition}</td>
+                  <td>{item.notes}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          <h4 className="text-md font-semibold mt-4 mb-2 text-gray-300">
+            Recommendations
+          </h4>
+          <p className="text-gray-300">{inspectionReport.recommendations}</p>
         </div>
       </div>
 
