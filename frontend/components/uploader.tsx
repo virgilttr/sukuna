@@ -1,6 +1,14 @@
 "use client";
 import React, { useState, useRef } from "react";
 import Link from "next/link";
+import PropertyDetails from "./PropertyDetails";
+
+type ExtractedInfo = {
+  construction: string;
+  occupancy: string;
+  protection: string;
+  exposure: string;
+};
 
 const FileUpload: React.FC = () => {
   const MAX_FILES = 5;
@@ -15,6 +23,10 @@ const FileUpload: React.FC = () => {
   const [oversizedFiles, setOversizedFiles] = useState<Set<string>>(new Set());
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
   const [invalidFiles, setInvalidFiles] = useState<Set<string>>(new Set());
+  const [showPropertyDetails, setShowPropertyDetails] = useState(false);
+  const [extractedInfo, setExtractedInfo] = useState<ExtractedInfo | null>(
+    null
+  );
   const [prompt, setPrompt] =
     useState<string>(`You are an experienced real estate analyst. Please only include information that is explicitly stated in the documents. Based on the provided documents, write a detailed investment report in the following format:
 Score # - Provide short sentence on recommendation.
@@ -273,6 +285,16 @@ Score: 4 - Recommend further analysis of the Coastal Keys Resort. The property s
       const data = await response.json();
       setSummary(data.summary || "No summary generated");
       setSummaryUrl(data.summaryUrl);
+      setExtractedInfo({
+        construction:
+          "High-quality materials used, structural integrity sound, overall build quality excellent.",
+        occupancy:
+          "Fully operational luxury hotel with 200 rooms, spa, and restaurant. High occupancy rates.",
+        protection:
+          "Advanced fire suppression system, 24/7 security, emergency response protocols in place.",
+        exposure:
+          "Coastal location with potential for hurricanes. Neighboring properties are mostly residential.",
+      });
     } catch (error) {
       console.error("Error generating summary:", error);
       setSummary("Failed to generate summary. Please try again.");
@@ -450,6 +472,19 @@ Score: 4 - Recommend further analysis of the Coastal Keys Resort. The property s
           </div>
         </div>
       )}
+      {summary && (
+        <button
+          onClick={() => setShowPropertyDetails(!showPropertyDetails)}
+          className="w-full bg-purple-600 hover:bg-purple-500 text-white px-4 py-2 rounded-md transition duration-200 ease-in-out"
+        >
+          {showPropertyDetails
+            ? "Hide Property Details"
+            : "Show Property Details"}
+        </button>
+      )}
+      {showPropertyDetails && extractedInfo && (
+        <PropertyDetails extractedInfo={extractedInfo} />
+      )}{" "}
     </div>
   );
 };
