@@ -20,41 +20,61 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ extractedInfo }) => {
     alert("Zoning verification letter generated!");
   };
 
-  // Dummy inspection report data
-  const inspectionReport = {
-    date: "June 15, 2024",
-    inspector: "John Doe",
-    overallCondition: "Good",
-    items: [
+  const environmentalImpact = {
+    title: "Environmental Impact Overview",
+    airQuality: "45 (Good)",
+    waterQuality: "Safe for all uses, minimal contaminants detected",
+    hazardousSites: [
       {
-        name: "Foundation",
-        condition: "Excellent",
-        notes: "No signs of settling or cracking",
+        name: "Old Chemical Plant",
+        distance: "3 miles away",
+        status: "Remediation ongoing",
       },
       {
-        name: "Roof",
-        condition: "Good",
-        notes: "Minor wear, estimated 5-7 years of life remaining",
-      },
-      {
-        name: "Electrical Systems",
-        condition: "Good",
-        notes: "Up to code, no major issues detected",
-      },
-      {
-        name: "Plumbing",
-        condition: "Fair",
-        notes: "Some pipes showing age, may need replacement in 3-5 years",
-      },
-      {
-        name: "HVAC",
-        condition: "Excellent",
-        notes: "Recently replaced, energy-efficient systems",
+        name: "Abandoned Gas Station",
+        distance: "4.5 miles away",
+        status: "No significant risk",
       },
     ],
-    recommendations:
-      "Schedule regular maintenance for plumbing systems. Consider budgeting for future roof replacement.",
+    compliance: [
+      { act: "Clean Air Act Compliance", status: "Fully compliant" },
+      { act: "Clean Water Act Compliance", status: "Fully compliant" },
+      {
+        act: "Hazardous Waste Management",
+        status: "Requires updated disposal plan by end of the year",
+      },
+    ],
   };
+
+  const comparableSales = [
+    {
+      name: "Tech Plaza Tower",
+      location: "1234 Innovation Lane, New York, NY",
+      size: "200,000 sq ft",
+      salePrice: "$120,000,000",
+      capRate: "6.5%",
+      yearBuilt: "2018",
+      source: "MLS",
+    },
+    {
+      name: "Silicon Gateway Center",
+      location: "5678 Enterprise Blvd, New York, NY",
+      size: "180,000 sq ft",
+      salePrice: "$110,000,000",
+      capRate: "6.8%",
+      yearBuilt: "2017",
+      source: "State Records",
+    },
+    {
+      name: "Digital Hub Building",
+      location: "9102 Tech Park Ave, New York, NY",
+      size: "220,000 sq ft",
+      salePrice: "$130,000,000",
+      capRate: "6.3%",
+      yearBuilt: "2019",
+      source: "MLS",
+    },
+  ];
 
   return (
     <div className="p-4 bg-gray-800 rounded-md">
@@ -62,22 +82,72 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ extractedInfo }) => {
         Property Details
       </h2>
 
-      {/* Extracted Information */}
+      {/* Environmental Impact Overview */}
       <div className="mb-6">
         <h3 className="text-lg font-semibold mb-2 text-gray-300">
-          Key Property Information
+          Environmental Protection Agency (EPA)
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {Object.entries(extractedInfo).map(([key, value]) => (
-            <div key={key} className="bg-gray-700 p-3 rounded-md">
-              <h4 className="text-gray-300 font-semibold capitalize">{key}</h4>
-              <p className="text-gray-400">{value}</p>
+        <div className="bg-gray-700 rounded-md p-4">
+          <h4 className="text-md font-semibold mb-2 text-gray-300">
+            {environmentalImpact.title}
+          </h4>
+          <ul className="list-none space-y-2 text-gray-300">
+            <li>
+              🌬️ Air Quality Index (AQI): {environmentalImpact.airQuality}
+            </li>
+            <li>💧 Water Quality Report: {environmentalImpact.waterQuality}</li>
+            <li>
+              ⚠️ Hazardous Waste Sites:{" "}
+              {environmentalImpact.hazardousSites.length} nearby sites within 5
+              miles
+              <ul className="list-disc pl-5 mt-2 space-y-1">
+                {environmentalImpact.hazardousSites.map((site, index) => (
+                  <li key={index}>
+                    {site.name} ({site.distance}) - {site.status}
+                  </li>
+                ))}
+              </ul>
+            </li>
+            <li>
+              📋 Environmental Regulations Compliance:
+              <ul className="list-disc pl-5 mt-2 space-y-1">
+                {environmentalImpact.compliance.map((item, index) => (
+                  <li key={index}>
+                    {item.act}: {item.status}
+                  </li>
+                ))}
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      {/* Comparable Sales */}
+      <div className="mb-6">
+        <h3 className="text-lg font-semibold mb-2 text-gray-300">
+          Comparable Market Data
+        </h3>
+        <div className="bg-gray-700 rounded-md p-4">
+          <h4 className="text-md font-semibold mb-2 text-gray-300">
+            Comparable Property Market Analysis
+          </h4>
+          {comparableSales.map((property, index) => (
+            <div key={index} className="mb-4">
+              <h5 className="text-gray-300 font-semibold">{property.name}:</h5>
+              <ul className="list-disc pl-5 text-gray-300">
+                <li>Location: {property.location}</li>
+                <li>Size: {property.size}</li>
+                <li>Sale Price: {property.salePrice}</li>
+                <li>Cap Rate: {property.capRate}</li>
+                <li>Year Built: {property.yearBuilt}</li>
+                <li>Source: {property.source}</li>
+              </ul>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Zoning Information */}
+      {/* Zoning Information (unchanged) */}
       <div className="mb-6">
         <h3 className="text-lg font-semibold mb-2 text-gray-300">
           Zoning Information
@@ -113,54 +183,7 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ extractedInfo }) => {
         </div>
       </div>
 
-      {/* Inspection Report */}
-      <div className="mb-6">
-        <h3 className="text-lg font-semibold mb-2 text-gray-300">
-          Inspection Report
-        </h3>
-        <div className="bg-gray-700 rounded-md p-4">
-          <p className="text-gray-300">
-            <span className="font-semibold">Date:</span> {inspectionReport.date}
-          </p>
-          <p className="text-gray-300">
-            <span className="font-semibold">Inspector:</span>{" "}
-            {inspectionReport.inspector}
-          </p>
-          <p className="text-gray-300">
-            <span className="font-semibold">Overall Condition:</span>{" "}
-            {inspectionReport.overallCondition}
-          </p>
-
-          <h4 className="text-md font-semibold mt-4 mb-2 text-gray-300">
-            Inspection Items
-          </h4>
-          <table className="w-full text-gray-300">
-            <thead>
-              <tr>
-                <th className="text-left">Item</th>
-                <th className="text-left">Condition</th>
-                <th className="text-left">Notes</th>
-              </tr>
-            </thead>
-            <tbody>
-              {inspectionReport.items.map((item, index) => (
-                <tr key={index}>
-                  <td className="pr-4">{item.name}</td>
-                  <td className="pr-4">{item.condition}</td>
-                  <td>{item.notes}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
-          <h4 className="text-md font-semibold mt-4 mb-2 text-gray-300">
-            Recommendations
-          </h4>
-          <p className="text-gray-300">{inspectionReport.recommendations}</p>
-        </div>
-      </div>
-
-      {/* Zoning Letter Generation */}
+      {/* Zoning Letter Generation (unchanged) */}
       <button
         onClick={generateZoningLetter}
         className="w-full bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-md transition duration-200 ease-in-out"
