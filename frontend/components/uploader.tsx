@@ -27,6 +27,7 @@ const FileUpload: React.FC = () => {
   const [extractedInfo, setExtractedInfo] = useState<ExtractedInfo | null>(
     null
   );
+  const [showPromptInput, setShowPromptInput] = useState(false);
   const [prompt, setPrompt] =
     useState<string>(`You are an experienced insurance underwriting analyst. Please only include information that is explicitly stated in the documents. Based on the provided documents, write a detailed property insurance underwriting assessment in the following format:Risk Assessment Score # - Provide a short sentence on the overall recommendation.OVERVIEWProvide a comprehensive summary of the insurance underwriting opportunity, highlighting key elements that would immediately interest an underwriter. The risks and exposure section should be exhaustive.RISK AND EXPOSURESummarize the potential risks and exposures of the property, focusing on the factors most likely to impact the insurance underwriting decision. Include specific data points and observations from the documents. Do not generalize. Ensure that each point is directly tied to information in the documents, but it is acceptable to make inferences based on your understanding of commercial property insurance.COPE ANALYSISPerform a detailed COPE analysis, covering:	•	Construction: Evaluate the materials, structural integrity, and overall build quality of the property.
 	•	Occupancy: Discuss the property’s use and occupancy, including any tenants, their operations, and the implications for insurance coverage.
@@ -328,6 +329,22 @@ Score: 4 - Recommend further analysis of Empire Tech Tower. The property is well
           Some files exceed the 4.5 MB size limit and cannot be processed.
         </p>
       )}
+      {showPromptInput && (
+        <div className="mb-4">
+          <textarea
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+            className="w-full h-40 p-2 border rounded-md bg-gray-700 text-gray-300"
+            placeholder="Enter AI prompt here..."
+          />
+        </div>
+      )}
+      <button
+        onClick={() => setShowPromptInput(!showPromptInput)}
+        className="w-full mb-4 bg-yellow-600 hover:bg-yellow-500 text-white px-4 py-2 rounded-md transition duration-200 ease-in-out"
+      >
+        {showPromptInput ? "Hide Prompt Input" : "Show Prompt Input"}
+      </button>
       <div className="flex space-x-2">
         <button
           onClick={requestSummary}
