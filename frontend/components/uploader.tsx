@@ -341,7 +341,7 @@ Score: 4 - Recommend further analysis of Empire Tech Tower. The property is well
       )}
       <button
         onClick={() => setShowPromptInput(!showPromptInput)}
-        className="w-full mb-4 bg-yellow-600 hover:bg-yellow-500 text-white px-4 py-2 rounded-md transition duration-200 ease-in-out"
+        className="w-full mb-4 bg-gray-500 hover:bg-gray-400 text-white px-4 py-2 rounded-md transition duration-200 ease-in-out"
       >
         {showPromptInput ? "Hide Prompt Input" : "Show Prompt Input"}
       </button>
