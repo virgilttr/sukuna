@@ -29,44 +29,110 @@ const FileUpload: React.FC = () => {
   );
   const [showPromptInput, setShowPromptInput] = useState(false);
   const [prompt, setPrompt] =
-    useState<string>(`You are an experienced insurance underwriting analyst. Please only include information that is explicitly stated in the documents. Based on the provided documents, write a detailed property insurance underwriting assessment in the following format:Risk Assessment Score # - Provide a short sentence on the overall recommendation.OVERVIEWProvide a comprehensive summary of the insurance underwriting opportunity, highlighting key elements that would immediately interest an underwriter. The risks and exposure section should be exhaustive.RISK AND EXPOSURESummarize the potential risks and exposures of the property, focusing on the factors most likely to impact the insurance underwriting decision. Include specific data points and observations from the documents. Do not generalize. Ensure that each point is directly tied to information in the documents, but it is acceptable to make inferences based on your understanding of commercial property insurance.COPE ANALYSISPerform a detailed COPE analysis, covering:	•	Construction: Evaluate the materials, structural integrity, and overall build quality of the property.
-	•	Occupancy: Discuss the property’s use and occupancy, including any tenants, their operations, and the implications for insurance coverage.
-	•	Protection: Analyze the property’s fire protection systems, security measures, and other safety features.
-	•	Exposure: Identify external risks, such as environmental factors, neighboring properties, and natural disaster potential.PROPERTY METRICS Extract the following property metrics, if available; otherwise, indicate “Not available”:	•	Year Built
-	•	Square Footage
-	•	Construction Type
-	•	Occupancy Type
-	•	Protection Systems (e.g., fire alarms, sprinklers)
-	•	External Exposure Risks CLAIMS HISTORY Review and summarize any past insurance claims related to the property. Focus on the nature of the claims, frequency, and severity, as well as any patterns that could impact future risk assessments.RECOMMENDATIONProvide a (1-5) score on the property based on the following scale:	•	5: If the risks are well-mitigated, and the property is a favorable underwriting opportunity.
-	•	4: If risks are present but manageable with standard precautions.
-	•	3: If risks and rewards seem to be balanced.
-	•	2: If the risks are concerning and may require significant mitigation.
-	•	1: If the risks are high, making the property a poor underwriting candidate.Do not recommend whether to insure or not insure. Instead, suggest a priority score (1-5) on further analyzing the property or continuing with the underwriting process based on the provided documents.ADDITIONAL GUIDELINES	•	Use specific data and figures from the provided documents wherever possible. If certain information is not available, please indicate this in your report.
-	•	Ensure that descriptions are specific and reference actual data from the documents. Avoid broad or vague statements.
-	•	Use the knowledge base for general inferences but avoid making major assumptions. If the information is not available, state “Not available.”
-	•	Avoid hallucinations and guesses. Only include information present in the documents.
-	•	Cite sources for each inference, either the name of the property document or general advice.
-	•	Use your understanding of commercial property insurance to highlight additional key insights based on the information from the reports.
-	•	The risks and exposures are the most important part, so the bullets for this section should be extensive.Example Format:The following is just an example format. Do not use these figures; only use it as a template:Preliminary Insurance Underwriting BriefRisk Assessment Score: 4 - Recommend further analysis of Empire Tech Tower.OVERVIEW
-Empire Tech Tower is a 25-story office building located at 330 Hudson Street, New York, NY, fully leased to a major tech corporation. The building includes a private fitness center and executive lounges. Built in 2020, the property spans 1.5 acres and is strategically located in a high-demand area.RISK AND EXPOSURE	•	Risks:
-	•	Recent fire damage to the server room due to faulty wiring (Source: Loss Run Report).
-	•	Water damage from a burst pipe affecting multiple floors (Source: Loss Run Report).
-	•	Theft of high-value tech equipment from a secure room (Source: Loss Run Report).
-	•	Windstorm causing structural damage to the facade (Source: Loss Run Report).
-	•	Explosion in a backup generator causing extensive damage to the mechanical room and nearby areas (Source: Loss Run Report).COPE ANALYSIS	•	Construction: The building is made of steel and glass with reinforced concrete foundations. Recent fire and windstorm damage have been reported, indicating potential vulnerabilities (Source: Inspection Report).
-	•	Occupancy: Single tenant (tech corporation) with high-value equipment and data servers. The occupancy type increases the risk profile due to the sensitive nature of the tenant’s operations (Source: Lease Agreement).
-	•	Protection: Fire alarms, sprinklers, and 24/7 security personnel are in place, but the recent theft incident raises concerns about the effectiveness of the security measures (Source: Inspection Report).
-	•	Exposure: Located in an urban area with moderate risk of windstorms. A nearby river presents a flooding risk that has affected the lower levels and electrical systems in the past (Source: Environmental Report).PROPERTY METRICS	•	Year Built: 2020
-	•	Square Footage: 450,000 sq ft
-	•	Construction Type: Steel frame with reinforced concrete
-	•	Occupancy Type: Single tenant, tech corporation
-	•	Protection Systems: Fire alarms, sprinklers, security personnel
-	•	External Exposure Risks: Flooding, windstorms CLAIMS HISTORY	•	Fire damage to server room due to faulty wiring.
-	•	Water damage from burst pipe affecting multiple floors.
-	•	Theft of high-value tech equipment from a secure room.
-	•	Windstorm causing structural damage to the facade.
-	•	Explosion in a backup generator causing extensive damage to the mechanical room.RECOMMENDATION
-Score: 4 - Recommend further analysis of Empire Tech Tower. The property is well-constructed and modern but has experienced several incidents that may increase its risk profile. Further investigation into recent damages and the effectiveness of existing protection measures is warranted.This set of instructions should guide the LLM in producing a comprehensive preliminary property underwriting assessment focused on commercial property insurance.`);
+    useState<string>(`You are an experienced real estate analyst. Please only include information that is explicitly stated in the documents. Based on the provided documents, write a detailed investment report in the following format:
+Score # - Provide short sentence on recommendation.
+OVERVIEW
+Provide a comprehensive summary of the investment opportunity, highlighting key elements that would immediately interest an investor. The risks and rewards section should be exhaustive.
+RISK AND REWARDS
+Summarize the potential risks and rewards of the investment, focusing on the factors most likely to impact returns. Include specific data points and observations from the documents. Do not generalize. Ensure that each point is directly tied to information in the documents, but it is ok to make inference based on your understanding of commercial real estate investment.
+INVESTMENT CASH FLOW ANALYSIS
+Create a detailed list of projected net investment cash flows (operating and finance) for the entire investment term, not a table. Indicate if certain information is not available. Ensure that the sum of these cash flows represents the total net cash flows for the investor over the investment period. Indicate if certain information is not available.
+PROPERTY METRICS
+Extract the following property metrics, if available, otherwise indicate “Not available”:
+Property purchase price
+Future Appreciated Value
+Year 1 operating income
+Year 1 operating expenses
+Year 1 net operating income
+INVESTMENT METRICS
+Extract the following investment metrics, if available, otherwise indicate “Not available”:
+Investment term
+Loan term
+Property value inflation rate
+Rental inflation rate
+Interest rate on debt
+Discount rate
+RETURN METRICS
+Extract the following return metrics, if available, otherwise indicate “Not available”:
+Discounted Cash Flow
+Equity Multiple (MOIC)
+Average Cap-Rate
+Internal Rate of Return
+Average Cash on Cash
+KEY ASSUMPTIONS
+List any major assumptions made in this analysis.
+RECOMMENDATION
+Provide a (1-5) score on the property based on the following scale:
+5: if rewards strongly outweigh risks
+4: if risks seem to outweigh risks
+3: if rewards and risks seem to be equal
+2: if risks seem to outweigh rewards
+1: if risks strongly outweigh rewards
+Do not recommend to invest or not invest. Instead, suggest a priority score (1-5) on further analyzing the property or continuing with the underwriting process based on the provided documents.  
+ADDITIONAL GUIDELINES
+Use specific data and figures from the provided documents wherever possible. If certain information is not available, please indicate this in your report.
+Ensure the descriptions are specific and reference actual data from the documents. Avoid broad or vague statements.
+Use the knowledge base for general inferences but avoid making major assumptions. If the information is not available, state "Not available."
+Avoid hallucinations and guesses. Only include information present in the documents.
+Cite sources for each inference, either the name of the property document or general advice.
+Use your understanding of commercial real estate investment to highlight additional key insights based on the information from the reports. 
+The risks and rewards are the most important part so the bullets for this section should be extensive.
+The following is just an example format. Do not use these figures; only use it as a template: 
+Preliminary Investment Brief
+Score: 4 - Recommend further analysis of the Coastal Keys Resort.
+OVERVIEW
+The Coastal Keys Resort presents a prime investment opportunity as a luxury boutique hotel in San Diego, CA, featuring 200 rooms, ocean views, a full-service spa, a gourmet restaurant, and a private beach. The property has shown consistent revenue growth and is projected to generate $12,150,000 in revenue next year with $8,000,000 in expenses.
+RISK AND REWARDS
+- Risks:
+- Recent hurricane damage requiring repairs within six months (Source: Lease Agreement Addendum).
+- High dependency on tourism, which can be volatile (Source: Property Appraisal).
+- Increasing operational expenses over the past three years (Source: Historical Financials).
+- Potential for increased competition from new hotels in the area (Source: Market Analysis).
+- Environmental regulations impacting coastal properties (Source: Environmental Report).
+- Rewards:
+- Prime location with ocean views and luxury amenities driving high occupancy rates (Source: Property Appraisal).
+- Significant revenue growth, with projections indicating continued upward trends (Source: Historical Financials).
+- Opportunity for rent increases aligned with market trends (Source: Market Analysis).
+- Strong brand presence and reputation enhancing guest loyalty (Source: Property Appraisal).
+- Diverse revenue streams including room bookings, spa services, and dining (Source: Income Statement).
+- High guest satisfaction and positive reviews supporting future growth (Source: Market Analysis).
+- Exclusive property with no immediate competitors in the vicinity (Source: Property Appraisal).
+- Favorable economic conditions boosting tourism and travel (Source: Market Analysis).
+PROPERTY METRICS
+- Property Purchase Price: $50,000,000
+- Future Appreciated Value: $62,000,000
+- Year 1 Rental Income: $12,150,000
+- Year 1 Operating Expenses: $8,000,000
+- Year 1 Net Operating Income: $4,150,000
+INVESTMENT METRICS
+- Investment term: 10 years
+- Property value inflation rate: 2.5%
+- Rental inflation rate: 3%
+- Loan term: 10 years
+- Interest rate on debt: 4%
+- Discount rate: 6%
+RETURN METRICS
+- Discounted Cash Flow: $8,000,000
+- Equity Multiple (MOIC): 2.5x
+- Average Cap-Rate: 6.5%
+- Internal Rate of Return: 12%
+- Average Cash on Cash: 10%
+INVESTMENT CASH FLOWS:
+- Year 1: ($54,150,000)
+- Year 2: $4,274,500
+- Year 3: $4,402,735
+- Year 4: $4,534,817
+- Year 5: $4,670,862
+- Year 6-10: Not available
+KEY ASSUMPTIONS
+- The property will undergo repairs for hurricane damage within six months.
+- Continued growth in the tourism sector will sustain high occupancy rates.
+- Operational expenses will stabilize following recent increases.
+- No significant changes in local environmental regulations.
+- Competitor hotels will not significantly impact occupancy rates.
+RECOMMENDATION
+Score: 4 - Recommend further analysis of the Coastal Keys Resort. The property shows strong revenue projections and is located in a prime area with high demand. However, the recent hurricane damage and the need for repairs pose a significant risk that must be thoroughly evaluated. The potential for increased competition and environmental regulations also warrants further investigation. Given these factors, a detailed examination of the repair costs and timelines for hurricane damage is essential before proceeding with the full underwriting process. The overall strong performance metrics and favorable location suggest that with proper due diligence, this property could be a valuable investment.
+`);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleReset = () => {
