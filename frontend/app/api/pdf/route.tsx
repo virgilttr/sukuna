@@ -4,7 +4,7 @@ import fs from "fs/promises";
 import path from "path";
 
 export async function POST(req: NextRequest) {
-  const { summary } = await req.json();
+  const { summary, logo, logoType } = await req.json();
 
   const pdfDoc = await PDFDocument.create();
   const regularFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
@@ -22,12 +22,29 @@ export async function POST(req: NextRequest) {
     const pageHeight = page.getHeight();
 
     const addLogo = async () => {
-      const logoPath = path.join(process.cwd(), "public", "findevor.png");
-      const logoImage = await fs.readFile(logoPath);
-      const logo = await pdfDoc.embedPng(logoImage);
+      let logoImage;
+      if (logo) {
+        // Use the uploaded logo
+        if (logoType.startsWith("image/png")) {
+          logoImage = await pdfDoc.embedPng(Buffer.from(logo));
+        } else if (logoType.startsWith("image/jpeg")) {
+          logoImage = await pdfDoc.embedJpg(Buffer.from(logo));
+        } else {
+          // Fallback to default logo if unsupported format
+          const logoPath = path.join(process.cwd(), "public", "findevor.png");
+          const defaultLogoImage = await fs.readFile(logoPath);
+          logoImage = await pdfDoc.embedPng(defaultLogoImage);
+        }
+      } else {
+        // Use the default Findevor logo
+        const logoPath = path.join(process.cwd(), "public", "findevor.png");
+        const defaultLogoImage = await fs.readFile(logoPath);
+        logoImage = await pdfDoc.embedPng(defaultLogoImage);
+      }
+
       const logoWidth = 150;
-      const logoHeight = logo.height * (logoWidth / logo.width);
-      page.drawImage(logo, {
+      const logoHeight = logoImage.height * (logoWidth / logoImage.width);
+      page.drawImage(logoImage, {
         x: (pageWidth - logoWidth) / 2,
         y: pageHeight - margin - logoHeight,
         width: logoWidth,

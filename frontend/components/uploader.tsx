@@ -22,6 +22,7 @@ const FileUpload: React.FC = () => {
   const [useSonnet, setUseSonnet] = useState(true);
   const [oversizedFiles, setOversizedFiles] = useState<Set<string>>(new Set());
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
+  const [logo, setLogo] = useState<File | null>(null);
   const [invalidFiles, setInvalidFiles] = useState<Set<string>>(new Set());
   const [showPropertyDetails, setShowPropertyDetails] = useState(false);
   const [extractedInfo, setExtractedInfo] = useState<ExtractedInfo | null>(
@@ -213,12 +214,25 @@ Score: 4 - Recommend further analysis of the Coastal Keys Resort. The property s
   const downloadAsPdf = async () => {
     try {
       setIsGeneratingPdf(true);
+
+      let logoContent = null;
+      let logoType = null;
+      if (logo) {
+        const logoArrayBuffer = await logo.arrayBuffer();
+        logoContent = Array.from(new Uint8Array(logoArrayBuffer));
+        logoType = logo.type;
+      }
+
       const response = await fetch("/api/pdf", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ summary }),
+        body: JSON.stringify({
+          summary,
+          logo: logoContent,
+          logoType,
+        }),
       });
 
       if (!response.ok) {
@@ -345,6 +359,52 @@ Score: 4 - Recommend further analysis of the Coastal Keys Resort. The property s
         </svg>
         Reset
       </button>{" "}
+      <div className="mb-4">
+        <input
+          type="file"
+          accept="image/png, image/jpeg"
+          onChange={(e) => setLogo(e.target.files?.[0] || null)}
+          className="hidden"
+          id="logo-upload"
+        />
+        <label
+          htmlFor="logo-upload"
+          className="flex items-center justify-center w-full px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-md transition duration-200 ease-in-out cursor-pointer"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5 mr-2"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+            />
+          </svg>
+          {logo ? "Change Logo" : "Upload Logo"}
+        </label>
+        {logo && (
+          <div className="mt-2 text-sm text-gray-300 flex items-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5 mr-1 text-green-500"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fillRule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clipRule="evenodd"
+              />
+            </svg>
+            {logo.name}
+          </div>
+        )}
+      </div>
       {files.length > 0 && (
         <p className="text-gray-500 text-sm text-center">
           {files.length} file{files.length !== 1 ? "s" : ""} selected (
