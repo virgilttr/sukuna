@@ -36,6 +36,8 @@ OVERVIEW
 Provide a comprehensive summary of the investment opportunity, highlighting key elements that would immediately interest an investor. The risks and rewards section should be exhaustive.
 RISK AND REWARDS
 Summarize the potential risks and rewards of the investment, focusing on the factors most likely to impact returns. Include specific data points and observations from the documents. Do not generalize. Ensure that each point is directly tied to information in the documents, but it is ok to make inference based on your understanding of commercial real estate investment.
+LEASE TERMS SUMMARY
+Extract and summarize the key lease terms for the property, focusing on factors critical to the investment decision. Include the tenant's strength, lease duration, rent escalations, operating expenses, and any other relevant terms. If multiple leases exist, first summarize the consistent terms and then identify any unique terms.
 INVESTMENT CASH FLOW ANALYSIS
 Create a detailed list of projected net investment cash flows (operating and finance) for the entire investment term, not a table. Indicate if certain information is not available. Ensure that the sum of these cash flows represents the total net cash flows for the investor over the investment period. Indicate if certain information is not available.
 PROPERTY METRICS
@@ -69,16 +71,16 @@ Provide a (1-5) score on the property based on the following scale:
 3: if rewards and risks seem to be equal
 2: if risks seem to outweigh rewards
 1: if risks strongly outweigh rewards
-Do not recommend to invest or not invest. Instead, suggest a priority score (1-5) on further analyzing the property or continuing with the underwriting process based on the provided documents.  
+Do not recommend to invest or not invest. Instead, suggest a priority score (1-5) on further analyzing the property or continuing with the underwriting process based on the provided documents.  
 ADDITIONAL GUIDELINES
 Use specific data and figures from the provided documents wherever possible. If certain information is not available, please indicate this in your report.
 Ensure the descriptions are specific and reference actual data from the documents. Avoid broad or vague statements.
 Use the knowledge base for general inferences but avoid making major assumptions. If the information is not available, state "Not available."
 Avoid hallucinations and guesses. Only include information present in the documents.
 Cite sources for each inference, either the name of the property document or general advice.
-Use your understanding of commercial real estate investment to highlight additional key insights based on the information from the reports. 
+Use your understanding of commercial real estate investment to highlight additional key insights based on the information from the reports. 
 The risks and rewards are the most important part so the bullets for this section should be extensive.
-The following is just an example format. Do not use these figures; only use it as a template: 
+The following is just an example format. Do not use these figures; only use it as a template: 
 Preliminary Investment Brief
 Score: 4 - Recommend further analysis of the Coastal Keys Resort.
 OVERVIEW
@@ -99,6 +101,12 @@ RISK AND REWARDS
 - High guest satisfaction and positive reviews supporting future growth (Source: Market Analysis).
 - Exclusive property with no immediate competitors in the vicinity (Source: Property Appraisal).
 - Favorable economic conditions boosting tourism and travel (Source: Market Analysis).
+LEASE TERMS SUMMARY
+- Tenant Strength: The Coastal Keys Resort is operated by a well-established hotel chain with a strong credit rating and financial stability. The tenant has a proven track record of managing similar properties successfully (Source: Lease Agreement).
+- Lease Duration: The lease term is for 15 years, beginning January 2021 and ending December 2035, with two 5-year renewal options (Source: Lease Agreement).
+- Rent Escalations: The lease includes annual rent escalations of 3%, adjusted every January (Source: Lease Agreement).
+- Operating Expenses: The lease is structured as a triple net lease, with the tenant responsible for all operating expenses, including property taxes, insurance, and maintenance (Source: Lease Agreement).
+- Unique Clauses: The lease includes an exclusivity clause that prevents the landlord from leasing any other nearby properties to competing hotel brands. There is also an early termination clause that allows the tenant to exit the lease after 10 years with a significant penalty (Source: Lease Agreement).
 PROPERTY METRICS
 - Property Purchase Price: $50,000,000
 - Future Appreciated Value: $62,000,000
@@ -132,8 +140,7 @@ KEY ASSUMPTIONS
 - No significant changes in local environmental regulations.
 - Competitor hotels will not significantly impact occupancy rates.
 RECOMMENDATION
-Score: 4 - Recommend further analysis of the Coastal Keys Resort. The property shows strong revenue projections and is located in a prime area with high demand. However, the recent hurricane damage and the need for repairs pose a significant risk that must be thoroughly evaluated. The potential for increased competition and environmental regulations also warrants further investigation. Given these factors, a detailed examination of the repair costs and timelines for hurricane damage is essential before proceeding with the full underwriting process. The overall strong performance metrics and favorable location suggest that with proper due diligence, this property could be a valuable investment.
-`);
+Score: 4 - Recommend further analysis of the Coastal Keys Resort. The property shows strong revenue projections and is located in a prime area with high demand. However, the recent hurricane damage and the need for repairs pose a significant risk that must be thoroughly evaluated. The potential for increased competition and environmental regulations also warrants further investigation. Given these factors, a detailed examination of the repair costs and timelines for hurricane damage is essential before proceeding with the full underwriting process. The overall strong performance metrics and favorable location suggest that with proper due diligence, this property could be a valuable investment.`);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleReset = () => {
