@@ -94,6 +94,12 @@ const PropertyDataComparison: React.FC = () => {
 
   const discrepancies = findDiscrepancies(dataSources);
 
+  const formatFieldName = (field: string) => {
+    return field
+      .replace(/([a-z])([A-Z])/g, "$1 $2")
+      .replace(/^[a-z]/, (char) => char.toUpperCase());
+  };
+
   const getFieldClass = (field: string) => {
     const isDiscrepancy = discrepancies.some((d) => d.field === field);
     return isDiscrepancy ? "text-red-500 font-semibold" : "";
@@ -111,7 +117,7 @@ const PropertyDataComparison: React.FC = () => {
             <li key={key} className="border-b border-gray-700 pb-4">
               <div className="flex justify-between items-center">
                 <span className="text-xl font-semibold text-gray-100 capitalize">
-                  {key.replace(/([a-z])([A-Z])/g, "$1 $2")}
+                  {formatFieldName(key)}
                 </span>
                 <div className="flex-1 ml-8">
                   {dataSources.map((source) => (
@@ -151,7 +157,7 @@ const PropertyDataComparison: React.FC = () => {
             {discrepancies.map((discrepancy, index) => (
               <div key={index} className="border-l-4 border-red-500 pl-4 py-2">
                 <h3 className="text-xl font-semibold mb-2 text-red-400">
-                  Discrepancy in {discrepancy.field}
+                  Discrepancy in {formatFieldName(discrepancy.field)}
                 </h3>
                 <p className="mb-2 text-gray-300">
                   <span className="font-medium text-gray-400">Sources:</span>{" "}
