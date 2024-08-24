@@ -27,6 +27,11 @@ const PropertyDataComparison: React.FC = () => {
         bedrooms: 4,
         bathrooms: 3,
         yearBuilt: 1985,
+        constructionType: "Brick",
+        roofType: "Shingle",
+        weatherPatterns: "Mild",
+        floodZone: "No",
+        fireRisk: "Low",
       },
       confidence: 0.9,
     },
@@ -38,6 +43,11 @@ const PropertyDataComparison: React.FC = () => {
         bedrooms: 4,
         bathrooms: 3,
         yearBuilt: 1986,
+        constructionType: "Brick",
+        roofType: "Shingle",
+        weatherPatterns: "Moderate",
+        floodZone: "No",
+        fireRisk: "Moderate",
       },
       confidence: 0.85,
     },
@@ -49,6 +59,11 @@ const PropertyDataComparison: React.FC = () => {
         bedrooms: 5,
         bathrooms: 3.5,
         yearBuilt: 1985,
+        constructionType: "Wood",
+        roofType: "Tile",
+        weatherPatterns: "Extreme",
+        floodZone: "Yes",
+        fireRisk: "High",
       },
       confidence: 0.75,
     },
@@ -56,7 +71,9 @@ const PropertyDataComparison: React.FC = () => {
 
   const findDiscrepancies = (sources: DataSource[]): Discrepancy[] => {
     const discrepancies: Discrepancy[] = [];
-    const fields = Object.keys(sources[0].data);
+    const fields = Object.keys(sources[0].data) as Array<
+      keyof DataSource["data"]
+    >;
 
     fields.forEach((field) => {
       const values = sources.map((source) => source.data[field]);
@@ -64,7 +81,7 @@ const PropertyDataComparison: React.FC = () => {
 
       if (uniqueValues.length > 1) {
         discrepancies.push({
-          field,
+          field: field as string,
           sources: sources.map((source) => source.name),
           values: uniqueValues,
           suggestion: `Verify ${field} with on-site inspection or contact the relevant authorities for clarification.`,
@@ -77,7 +94,7 @@ const PropertyDataComparison: React.FC = () => {
 
   const discrepancies = findDiscrepancies(dataSources);
 
-  const getFieldClass = (source: DataSource, field: string) => {
+  const getFieldClass = (field: string) => {
     const isDiscrepancy = discrepancies.some((d) => d.field === field);
     return isDiscrepancy ? "text-red-500 font-semibold" : "";
   };
@@ -88,43 +105,45 @@ const PropertyDataComparison: React.FC = () => {
         Property Data Comparison
       </h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-        {dataSources.map((source, index) => (
-          <div
-            key={index}
-            className="bg-gray-800 p-6 rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl"
-          >
-            <h2 className="text-2xl font-semibold mb-4 text-gray-100">
-              {source.name}
-            </h2>
-            <div className="mb-4 flex items-center">
-              <div className="w-full bg-gray-700 rounded-full h-2.5">
-                <div
-                  className="bg-blue-600 h-2.5 rounded-full"
-                  style={{ width: `${source.confidence * 100}%` }}
-                ></div>
+      <div className="bg-gray-800 p-6 rounded-xl shadow-lg">
+        <ul className="space-y-6">
+          {Object.keys(dataSources[0].data).map((key) => (
+            <li key={key} className="border-b border-gray-700 pb-4">
+              <div className="flex justify-between items-center">
+                <span className="text-xl font-semibold text-gray-100 capitalize">
+                  {key.replace(/([a-z])([A-Z])/g, "$1 $2")}
+                </span>
+                <div className="flex-1 ml-8">
+                  {dataSources.map((source) => (
+                    <div key={source.name} className="flex items-center mb-2">
+                      <span className="text-gray-400 font-medium mr-4">
+                        {source.name}:
+                      </span>
+                      <span className={`${getFieldClass(key)} text-gray-300`}>
+                        {source.data[key as keyof DataSource["data"]]}
+                      </span>
+                      <div className="ml-4 w-1/4 bg-gray-700 rounded-full h-2.5">
+                        <div
+                          className="bg-blue-600 h-2.5 rounded-full"
+                          style={{
+                            width: `${source.confidence * 100}%`,
+                          }}
+                        ></div>
+                      </div>
+                      <span className="ml-2 text-sm font-medium text-gray-300">
+                        {(source.confidence * 100).toFixed(1)}%
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <span className="ml-2 text-sm font-medium text-gray-300">
-                {(source.confidence * 100).toFixed(1)}%
-              </span>
-            </div>
-            <ul className="space-y-2">
-              {Object.entries(source.data).map(([key, value]) => (
-                <li
-                  key={key}
-                  className={`${getFieldClass(source, key)} text-gray-300`}
-                >
-                  <span className="font-medium text-gray-400">{key}:</span>{" "}
-                  {value}
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
+            </li>
+          ))}
+        </ul>
       </div>
 
       {discrepancies.length > 0 && (
-        <div className="bg-gray-800 p-8 rounded-xl shadow-lg">
+        <div className="bg-gray-800 p-8 rounded-xl shadow-lg mt-8">
           <h2 className="text-3xl font-bold mb-6 text-gray-100">
             Discrepancies
           </h2>
