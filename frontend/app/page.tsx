@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import Head from "next/head";
 import FileUpload from "../components/uploader";
-import PropertyDataComparison from "@/components/PropertyDataComparison";
 import SidePanel from "@/components/SidePannel";
 
 const Home: React.FC = () => {
@@ -29,7 +28,7 @@ const Home: React.FC = () => {
 
       <main className="container mx-auto px-4 py-8 max-w-3xl">
         <h1 className="text-4xl font-bold mb-8 text-center text-zinc-100">
-          Findevor AI Assistant
+          Findevor AI Agent
         </h1>
         <div className="space-y-8">
           <div className="bg-zinc-900 rounded-lg p-8 shadow-lg">
