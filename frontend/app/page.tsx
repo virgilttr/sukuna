@@ -1,14 +1,32 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import Head from "next/head";
 import FileUpload from "../components/uploader";
-import Link from "next/link";
+import PropertyDataComparison from "@/components/PropertyDataComparison";
+import SidePanel from "@/components/SidePannel";
 
 const Home: React.FC = () => {
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
+
+  const togglePanel = () => {
+    setIsPanelOpen(!isPanelOpen);
+  };
+
   return (
-    <div className="min-h-screen bg-black text-zinc-300">
+    <div className="min-h-screen bg-black text-zinc-300 relative">
       <Head>
         <title>AI Orchestration Panel</title>
       </Head>
+
+      {/* Button to toggle the panel */}
+      <button
+        className="fixed top-4 right-4 bg-blue-500 text-white p-3 rounded-full shadow-lg z-50"
+        onClick={togglePanel}
+      >
+        {isPanelOpen ? "-" : "+"}
+      </button>
+
       <main className="container mx-auto px-4 py-8 max-w-3xl">
         <h1 className="text-4xl font-bold mb-8 text-center text-zinc-100">
           Findevor AI Assistant
@@ -34,23 +52,13 @@ const Home: React.FC = () => {
             </h2>
             <FileUpload />
           </div>
-          <div className="bg-zinc-900 rounded-lg p-8 shadow-lg">
-            <h2 className="text-2xl font-semibold mb-6 text-zinc-100">
-              Property Comparison
-            </h2>
-            <p className="text-lg mb-6">
-              Compare property data from various sources and identify
-              discrepancies.
-            </p>
-            <Link
-              href="/property-comparison"
-              className="text-blue-500 hover:underline"
-            >
-              Go to Property Comparison Page
-            </Link>
-          </div>
         </div>
       </main>
+
+      {/* Side Panel Component */}
+      <SidePanel isOpen={isPanelOpen} onClose={togglePanel}>
+        <PropertyDataComparison />
+      </SidePanel>
     </div>
   );
 };
