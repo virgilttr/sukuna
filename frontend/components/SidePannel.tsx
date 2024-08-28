@@ -53,6 +53,21 @@ const SidePanel: React.FC<SidePanelProps> = ({ isOpen, onClose, children }) => {
                 Go to Comparison Page
               </button>
             </Link>
+
+            <h2 className="text-2xl font-semibold text-gray-100 mb-4 mt-8">
+              Property Details
+            </h2>
+            <p className="text-gray-300 mb-6">
+              View detailed information about property data.
+            </p>
+            <Link href="/property-details">
+              <button
+                onClick={onClose}
+                className="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-500 transition"
+              >
+                Go to Property Details Page
+              </button>
+            </Link>
           </div>
           {/* Additional Links or Content */}
           <div className="mt-auto">

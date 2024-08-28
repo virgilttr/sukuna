@@ -24,7 +24,6 @@ const FileUpload: React.FC = () => {
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
   const [logo, setLogo] = useState<File | null>(null);
   const [invalidFiles, setInvalidFiles] = useState<Set<string>>(new Set());
-  const [showPropertyDetails, setShowPropertyDetails] = useState(false);
   const [extractedInfo, setExtractedInfo] = useState<ExtractedInfo | null>(
     null
   );
@@ -538,19 +537,6 @@ Score: 4 - Recommend further analysis of the Coastal Keys Resort. The property s
           </div>
         </div>
       )}
-      {summary && (
-        <button
-          onClick={() => setShowPropertyDetails(!showPropertyDetails)}
-          className="w-full bg-purple-600 hover:bg-purple-500 text-white px-4 py-2 rounded-md transition duration-200 ease-in-out"
-        >
-          {showPropertyDetails
-            ? "Hide Property Details"
-            : "Show Property Details"}
-        </button>
-      )}
-      {showPropertyDetails && extractedInfo && (
-        <PropertyDetails extractedInfo={extractedInfo} />
-      )}{" "}
     </div>
   );
 };
