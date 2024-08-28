@@ -1,6 +1,7 @@
 import React from "react";
 import Head from "next/head";
 import FileUpload from "../components/uploader";
+import Link from "next/link";
 
 const Home: React.FC = () => {
   return (
@@ -32,6 +33,21 @@ const Home: React.FC = () => {
               File Upload
             </h2>
             <FileUpload />
+          </div>
+          <div className="bg-zinc-900 rounded-lg p-8 shadow-lg">
+            <h2 className="text-2xl font-semibold mb-6 text-zinc-100">
+              Property Comparison
+            </h2>
+            <p className="text-lg mb-6">
+              Compare property data from various sources and identify
+              discrepancies.
+            </p>
+            <Link
+              href="/property-comparison"
+              className="text-blue-500 hover:underline"
+            >
+              Go to Property Comparison Page
+            </Link>
           </div>
         </div>
       </main>
