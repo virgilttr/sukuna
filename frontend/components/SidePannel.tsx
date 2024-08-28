@@ -7,10 +7,9 @@ import { AiOutlineClose } from "react-icons/ai";
 interface SidePanelProps {
   isOpen: boolean;
   onClose: () => void;
-  children: React.ReactNode;
 }
 
-const SidePanel: React.FC<SidePanelProps> = ({ isOpen, onClose, children }) => {
+const SidePanel: React.FC<SidePanelProps> = ({ isOpen, onClose }) => {
   return (
     <>
       {/* Overlay */}
@@ -39,33 +38,33 @@ const SidePanel: React.FC<SidePanelProps> = ({ isOpen, onClose, children }) => {
           {/* Content */}
           <div className="mt-4 flex-1">
             <h2 className="text-2xl font-semibold text-gray-100 mb-4">
-              Property Comparison
+              Data Validation
             </h2>
             <p className="text-gray-300 mb-6">
               Compare property data from various sources and identify
               discrepancies seamlessly.
             </p>
-            <Link href="/property-comparison">
+            <Link href="/data-validation">
               <button
                 onClick={onClose}
                 className="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-500 transition"
               >
-                Go to Comparison Page
+                Go to Data Validation Page
               </button>
             </Link>
 
             <h2 className="text-2xl font-semibold text-gray-100 mb-4 mt-8">
-              Property Details
+              External data
             </h2>
             <p className="text-gray-300 mb-6">
-              View detailed information about property data.
+              View external data about the property.
             </p>
-            <Link href="/property-details">
+            <Link href="/external-data">
               <button
                 onClick={onClose}
                 className="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-500 transition"
               >
-                Go to Property Details Page
+                Go to External Data Page
               </button>
             </Link>
           </div>

@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 
-interface PropertyDetailsProps {
+interface ExternalDatalsProps {
   extractedInfo: {
     construction: string;
     occupancy: string;
@@ -10,7 +10,7 @@ interface PropertyDetailsProps {
   };
 }
 
-const PropertyDetails: React.FC<PropertyDetailsProps> = ({ extractedInfo }) => {
+const ExternalData: React.FC<ExternalDatalsProps> = ({ extractedInfo }) => {
   const [isGeneratingLetter, setIsGeneratingLetter] = useState(false);
 
   const generateZoningLetter = async () => {
@@ -79,9 +79,7 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ extractedInfo }) => {
 
   return (
     <div className="p-4 bg-gray-800 rounded-md">
-      <h2 className="text-2xl font-bold mb-4 text-gray-200">
-        Property Details
-      </h2>
+      <h2 className="text-2xl font-bold mb-4 text-gray-200">External Data</h2>
 
       {/* Environmental Impact Overview */}
       <div className="mb-6">
@@ -198,4 +196,4 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ extractedInfo }) => {
   );
 };
 
-export default PropertyDetails;
+export default ExternalData;

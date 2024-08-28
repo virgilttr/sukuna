@@ -56,9 +56,7 @@ const Home: React.FC = () => {
       </main>
 
       {/* Side Panel Component */}
-      <SidePanel isOpen={isPanelOpen} onClose={togglePanel}>
-        <PropertyDataComparison />
-      </SidePanel>
+      <SidePanel isOpen={isPanelOpen} onClose={togglePanel}></SidePanel>
     </div>
   );
 };

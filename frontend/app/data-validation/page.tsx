@@ -1,4 +1,4 @@
-import PropertyDataComparison from "@/components/PropertyDataComparison";
+import DataValidation from "@/components/DataValidation";
 import Link from "next/link";
 
 export default function PropertyComparisonPage() {
@@ -11,7 +11,7 @@ export default function PropertyComparisonPage() {
           </button>
         </Link>
       </div>
-      <PropertyDataComparison />
+      <DataValidation />
     </div>
   );
 }

@@ -1,8 +1,8 @@
 import React from "react";
-import PropertyDetails from "@/components/PropertyDetails"; // Adjust the import path as necessary
+import ExternalData from "@/components/ExternalData"; // Adjust the import path as necessary
 import Link from "next/link";
 
-export default function PropertyDetailsPage() {
+export default function ExternalDataPage() {
   // Sample data to pass to the PropertyDetails component
   const extractedInfo = {
     construction: "Steel Frame",
@@ -21,7 +21,7 @@ export default function PropertyDetailsPage() {
         </Link>
       </div>
       <div className="container mx-auto px-4">
-        <PropertyDetails extractedInfo={extractedInfo} />
+        <ExternalData extractedInfo={extractedInfo} />
       </div>
     </div>
   );

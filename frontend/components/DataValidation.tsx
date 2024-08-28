@@ -17,7 +17,7 @@ interface Discrepancy {
   suggestion: string;
 }
 
-const PropertyDataComparison: React.FC = () => {
+const DataValidation: React.FC = () => {
   const dataSources: DataSource[] = [
     {
       name: "Government Tax Records",
@@ -179,4 +179,4 @@ const PropertyDataComparison: React.FC = () => {
   );
 };
 
-export default PropertyDataComparison;
+export default DataValidation;
