@@ -2,6 +2,7 @@
 import React from "react";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { AlertCircle, Info } from "lucide-react";
+import ClaimsHistory from "@/components/ClaimsHistory";
 
 type RiskCategory = "lowRisk" | "mediumRisk" | "highRisk";
 
@@ -140,6 +141,9 @@ const InsurancePricing: React.FC = () => {
           </ul>
         </CardContent>
       </Card>
+      <div className="mb-8">
+        <ClaimsHistory />
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <Card className="bg-gray-800 border-gray-700 shadow-lg">
           <CardHeader className="bg-purple-600 text-white">
@@ -193,23 +197,6 @@ const InsurancePricing: React.FC = () => {
                 <li key={key} className="flex justify-between">
                   <span className="capitalize text-gray-300">{key}:</span>
                   <span className="font-semibold text-orange-300">{value}</span>
-                </li>
-              ))}
-            </ul>
-          </CardContent>
-        </Card>
-        <Card className="bg-gray-800 border-gray-700 shadow-lg">
-          <CardHeader className="bg-red-600 text-white">
-            <h2 className="text-2xl font-semibold">Claims History</h2>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-2">
-              {claimsHistory.map((claim, index) => (
-                <li key={index} className="flex justify-between">
-                  <span className="text-gray-300">{claim.year}:</span>
-                  <span className="font-semibold text-red-300">
-                    ${claim.amount} - {claim.description}
-                  </span>
                 </li>
               ))}
             </ul>
