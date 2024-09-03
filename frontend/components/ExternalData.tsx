@@ -153,21 +153,21 @@ const ExternalData: React.FC<ExternalDatalsProps> = ({ extractedInfo }) => {
         </h3>
         <div className="bg-gray-700 rounded-md p-4">
           <h4 className="text-md font-semibold mb-2 text-gray-300">
-            Coastal Keys Resort Hotel
+            Empire Tech Tower
           </h4>
           <table className="w-full text-gray-300">
             <tbody>
               <tr>
                 <td className="font-semibold pr-4">Address:</td>
-                <td>123 Ocean Drive, San Diego, CA 92101</td>
+                <td>330 Hudson Street, New York, NY 10013</td>
               </tr>
               <tr>
                 <td className="font-semibold pr-4">Zoning District:</td>
-                <td>CR (Commercial Resort)</td>
+                <td>CO (Commercial Office)</td>
               </tr>
               <tr>
                 <td className="font-semibold pr-4">Allowed Uses:</td>
-                <td>Hotels, Resorts, Restaurants, Recreational Facilities</td>
+                <td>Office, Retail, Restaurant</td>
               </tr>
               <tr>
                 <td className="font-semibold pr-4">Height Limit:</td>
