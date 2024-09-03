@@ -54,7 +54,7 @@ const InsurancePricing: React.FC = () => {
   const competitorsPricing = {
     Progressive: 600000,
     Berkshire: 650000,
-    Lemonade: 750000,
+    Allstate: 750000,
   };
 
   const premiumPricing = "$250,000 - $300,000";
