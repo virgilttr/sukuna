@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useRef } from "react";
 import Link from "next/link";
+import MockChat from "@/components/MockChat"; // Make sure to create this file in the same directory
 
 type ExtractedInfo = {
   construction: string;
@@ -26,11 +27,12 @@ const FileUpload: React.FC = () => {
   const [extractedInfo, setExtractedInfo] = useState<ExtractedInfo | null>(
     null
   );
+  const [showMockChat, setShowMockChat] = useState(false);
   const [showPromptInput, setShowPromptInput] = useState(false);
   const [prompt, setPrompt] = useState<string>(`
 Premium Pricing Analysis:
 Based on the provided documents, calculate and provide an estimated premium range for insuring the property. Consider the risk factors, claims history, and COPE analysis in your calculation. Clearly state the factors that have the most significant impact on the premium and explain any assumptions made during the estimation.You are an experienced insurance underwriting analyst. Please only include information that is explicitly stated in the documents. Based on the provided documents, write a detailed property insurance underwriting assessment in the following format:Risk Quality Score:
-Give the score a 4 and provide a short sentence on the overall recommendation. Give the following recommended premium Pricing: $250,000 - $300,000 annually
+Give the score a 4, a premium Pricing of $250,000 - $300,000 annually and provide a short sentence on the overall recommendation. 
 OVERVIEW:
 Provide a comprehensive summary of the insurance underwriting opportunity, highlighting key elements that would immediately interest an underwriter. The risks and exposure section should be exhaustive.RISK AND EXPOSURE:
 Summarize the potential risks and exposures of the property, focusing on the factors most likely to impact the insurance underwriting decision. Include specific data points and observations from the documents. Do not generalize. Ensure that each point is directly tied to information in the documents, but it is acceptable to make inferences based on your understanding of commercial property insurance.
@@ -250,6 +252,7 @@ Score: 4 - Recommend further analysis of Empire Tech Tower. The property is well
         exposure:
           "Coastal location with potential for hurricanes. Neighboring properties are mostly residential.",
       });
+      setShowMockChat(true); // Show the mock chat after processing
     } catch (error) {
       console.error("Error generating summary:", error);
       setSummary("Failed to generate summary. Please try again.");
@@ -482,6 +485,7 @@ Score: 4 - Recommend further analysis of Empire Tech Tower. The property is well
           </div>
         </div>
       )}
+      <MockChat isVisible={showMockChat} />
     </div>
   );
 };
