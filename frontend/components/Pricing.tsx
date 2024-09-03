@@ -20,7 +20,8 @@ type RiskExposure = {
 };
 
 const InsurancePricing: React.FC = () => {
-  const riskScore = 75; // Static risk score
+  const riskScore = 4; // Risk score out of 5
+  const riskQualityRecommendation = "Recommend further analysis";
 
   const riskFactorContributions: RiskFactorContribution[] = [
     { name: "Natural Disasters", contribution: 20 },
@@ -50,29 +51,22 @@ const InsurancePricing: React.FC = () => {
     exposure: "No adjacent hazards",
   };
 
-  const claimsHistory = [
-    { year: "2022-01-15", amount: 750000, description: "Fire" },
-    { year: "2021-09-10", amount: 1200000, description: "Water" },
-    { year: "2020-03-05", amount: 500000, description: "Theft" },
-    { year: "2019-11-20", amount: 900000, description: "Wind" },
-    { year: "2021-07-14", amount: 100000, description: "Slip" },
-    { year: "2022-06-25", amount: 2500000, description: "Explosion" },
-    { year: "2020-08-15", amount: 3800000, description: "Flood" },
-    { year: "2021-02-10", amount: 1750000, description: "Mold" },
-  ];
-
-  const competitionPricing = {
-    Progressive: 1800,
-    Berkshire: 2200,
-    Lemonade: 1950,
+  const competitorsPricing = {
+    Progressive: 600000,
+    Berkshire: 650000,
+    Lemonade: 750000,
   };
 
-  const premiumPricing = "$500,000 - $750,000";
+  const premiumPricing = "$250,000 - $300,000";
 
   const getRiskScoreColor = (score: number): string => {
-    if (score <= 49) return "bg-red-600";
-    if (score <= 74) return "bg-yellow-600";
+    if (score <= 2) return "bg-red-600";
+    if (score <= 4) return "bg-yellow-600";
     return "bg-blue-600";
+  };
+
+  const getRiskScoreWidth = (score: number): string => {
+    return `${(score / 5) * 100}%`;
   };
 
   return (
@@ -86,18 +80,23 @@ const InsurancePricing: React.FC = () => {
         </CardHeader>
         <CardContent>
           <div className="flex items-center justify-between mb-4">
-            <div
-              className={`h-8 w-full rounded-full ${getRiskScoreColor(
-                riskScore
-              )}`}
-              style={{ width: `${riskScore}%` }}
-            ></div>
+            <div className="w-full bg-gray-700 rounded-full h-8 mr-4">
+              <div
+                className={`h-full rounded-full ${getRiskScoreColor(
+                  riskScore
+                )}`}
+                style={{ width: getRiskScoreWidth(riskScore) }}
+              ></div>
+            </div>
             <span className="text-5xl font-bold text-blue-300 ml-4">
               {riskScore}
             </span>
           </div>
           <p className="text-sm text-gray-400 mb-4">
-            0-49: High Risk, 50-74: Medium Risk, 75-100: Low Risk
+            0-2: High Risk, 3-4: Medium Risk, 5: Low Risk
+          </p>
+          <p className="text-lg font-semibold text-blue-300 mb-4">
+            Recommendation: {riskQualityRecommendation}
           </p>
           <h3 className="text-xl font-semibold mb-2 text-blue-300">
             Risk Factor Contributions
@@ -143,7 +142,7 @@ const InsurancePricing: React.FC = () => {
       </Card>
       <div className="mb-8">
         <ClaimsHistory />
-      </div>
+      </div>{" "}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <Card className="bg-gray-800 border-gray-700 shadow-lg">
           <CardHeader className="bg-purple-600 text-white">
@@ -204,13 +203,13 @@ const InsurancePricing: React.FC = () => {
         </Card>
         <Card className="bg-gray-800 border-gray-700 shadow-lg">
           <CardHeader className="bg-yellow-600 text-white">
-            <h2 className="text-2xl font-semibold">Competition Pricing</h2>{" "}
+            <h2 className="text-2xl font-semibold">Competitors Pricing</h2>{" "}
           </CardHeader>{" "}
           <CardContent>
             {" "}
             <ul className="space-y-2">
               {" "}
-              {Object.entries(competitionPricing).map(([competitor, price]) => (
+              {Object.entries(competitorsPricing).map(([competitor, price]) => (
                 <li key={competitor} className="flex justify-between">
                   {" "}
                   <span className="text-gray-300">{competitor}:</span>{" "}
