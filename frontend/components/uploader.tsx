@@ -2,6 +2,7 @@
 import React, { useState, useRef } from "react";
 import Link from "next/link";
 import MockChat from "@/components/MockChat"; // Make sure to create this file in the same directory
+import { Pencil } from "lucide-react";
 
 type ExtractedInfo = {
   construction: string;
@@ -421,10 +422,11 @@ Score: 4 - Recommend further analysis of Empire Tech Tower. The property is well
       )}
       <button
         onClick={() => setShowPromptInput(!showPromptInput)}
-        className="w-full mb-4 bg-gray-500 hover:bg-gray-400 text-white px-4 py-2 rounded-md transition duration-200 ease-in-out"
+        className="w-full mb-4 bg-gray-500 hover:bg-gray-400 text-white px-4 py-2 rounded-md transition duration-200 ease-in-out flex items-center justify-center"
+        aria-label={showPromptInput ? "Hide Prompt Input" : "Show Prompt Input"}
       >
-        {showPromptInput ? "Hide Prompt Input" : "Show Prompt Input"}
-      </button>
+        <Pencil size={24} />
+      </button>{" "}
       <div className="flex space-x-2">
         <button
           onClick={requestSummary}
