@@ -419,6 +419,12 @@ Score: 4 - Recommend further analysis of Empire Tech Tower. The property is well
           />
         </div>
       )}
+      <button
+        onClick={() => setShowPromptInput(!showPromptInput)}
+        className="w-full mb-4 bg-gray-500 hover:bg-gray-400 text-white px-4 py-2 rounded-md transition duration-200 ease-in-out"
+      >
+        {showPromptInput ? "Hide Prompt Input" : "Show Prompt Input"}
+      </button>
       <div className="flex space-x-2">
         <button
           onClick={requestSummary}
